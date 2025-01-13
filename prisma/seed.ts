@@ -7,6 +7,13 @@ const prisma = new PrismaClient();
 async function main() {
     console.log("Starting database seeding...");
 
+// Check if data already exists
+const userCount = await prisma.user.count();
+if (userCount > 0) {
+    console.log('Database already seeded, skipping...');
+    return;
+}
+
     // Seed Users
     console.log("Seeding users...");
     const users = await Promise.all(
