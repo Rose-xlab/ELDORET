@@ -1,0 +1,297 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int                 @id @default(autoincrement())
+  name      String
+  email     String              @unique
+  password  String
+  image     String?
+  nominated NomineeRating[]
+  reported  InstitutionRating[]
+  createdAt DateTime            @default(now())
+  comments  Comment[]
+  // Add these new relations
+  commentReplies CommentReply[]
+  reactions      CommentReaction[]
+  submittedEvidence Evidence[]
+  verifiedEvidence  Evidence[] @relation("EvidenceVerifier")
+  createdScandals   Scandal[]
+}
+
+
+model Nominee {
+  id            Int             @id @default(autoincrement())
+  name          String
+  positionId    Int
+  institutionId Int
+  districtId    Int
+  image         String?
+  rating        NomineeRating[]
+  position      Position        @relation(fields: [positionId], references: [id])
+  institution   Institution     @relation(fields: [institutionId], references: [id])
+  district      District        @relation(fields: [districtId], references: [id])
+  status        Boolean         @default(false)
+  evidence      String?         
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  comments      Comment[]
+  overallRank   Int?           // Current overall rank
+  rankHistory   NomineeRankHistory[]
+  scandals      Scandal[]
+  evidences     Evidence[]
+}
+
+model Position {
+  id        Int       @id @default(autoincrement())
+  name      String
+  nominees  Nominee[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  status    Boolean   @default(true)
+}
+
+model Institution {
+  id            Int                 @id @default(autoincrement())
+  name          String
+  image         String?
+  status        Boolean             @default(false)
+  nominees      Nominee[]
+  comments      Comment[]
+  rating        InstitutionRating[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  overallRank   Int?               // Current overall rank
+  rankHistory   InstitutionRankHistory[]
+  scandals      Scandal[]
+  evidences     Evidence[]
+}
+
+model District {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  region    String
+  nominees  Nominee[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  status    Boolean   @default(true)
+}
+
+model NomineeRating {
+  id               Int            @id @default(autoincrement())
+  userId           Int
+  nomineeId        Int
+  ratingCategoryId Int
+  score            Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  nominee          Nominee        @relation(fields: [nomineeId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
+  ratingCategory   RatingCategory @relation(fields: [ratingCategoryId], references: [id])
+  categoryRank     Int?
+  comment          String?
+}
+
+model InstitutionRating {
+  id               Int            @id @default(autoincrement())
+  userId           Int
+  institutionId    Int
+  ratingCategoryId Int
+  score            Int
+  comment          String?         // Changed from evidence to comment
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  institution      Institution    @relation(fields: [institutionId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
+  ratingCategory   InstitutionRatingCategory @relation(fields: [ratingCategoryId], references: [id])
+  categoryRank     Int?
+}
+
+model Department {
+  id         Int              @id @default(autoincrement())
+  name       String
+  categories RatingCategory[]
+  InstitutionRatingCategory InstitutionRatingCategory[]
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  status                    Boolean                     @default(true)
+}
+
+model ImpactArea {
+  id         Int              @id @default(autoincrement())
+  name       String
+  categories RatingCategory[]
+  InstitutionRatingCategory InstitutionRatingCategory[]
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  status                    Boolean                     @default(true)
+}
+
+model RatingCategory {
+  id          Int          @id @default(autoincrement())
+  keyword     String       @unique
+  name        String
+  icon        String
+  description String
+  weight      Int
+  examples    String[]
+  impactAreas ImpactArea[]
+  departments Department[]
+  NomineeRating NomineeRating[]
+  rankHistory   NomineeRankHistory[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  status      Boolean      @default(true)
+}
+
+model InstitutionRatingCategory {
+  id          Int          @id @default(autoincrement())
+  keyword     String       @unique
+  name        String
+  icon        String
+  description String
+  weight      Int
+  examples    String[]
+  impactAreas ImpactArea[]
+  departments Department[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  status      Boolean      @default(true)
+  InstitutionRating InstitutionRating[]
+  rankHistory InstitutionRankHistory[]
+}
+
+model NomineeRankHistory {
+  id          Int      @id @default(autoincrement())
+  nomineeId   Int
+  nominee     Nominee  @relation(fields: [nomineeId], references: [id])
+  rank        Int
+  date        DateTime @default(now())
+  categoryId  Int?     // Null for overall rank, populated for category-specific rank
+  category    RatingCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model InstitutionRankHistory {
+  id            Int           @id @default(autoincrement())
+  institutionId Int
+  institution   Institution   @relation(fields: [institutionId], references: [id])
+  rank          Int
+  date          DateTime      @default(now())
+  categoryId    Int?          // Null for overall rank, populated for category-specific rank
+  category      InstitutionRatingCategory? @relation(fields: [categoryId], references: [id])
+}
+
+enum Severity {
+  Minor       @map("1")
+  Moderate    @map("2")
+  Significant @map("3")
+  Severe      @map("4")
+  Critical    @map("5")
+}
+
+model Comment {
+  id            Int                 @id @default(autoincrement())
+  content       String
+  userId        Int
+  nomineeId     Int?
+  institutionId Int?
+  replies       CommentReply[]
+  reactions     CommentReaction[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  user          User                @relation(fields: [userId], references: [id])
+  nominee       Nominee?            @relation(fields: [nomineeId], references: [id])
+  institution   Institution?        @relation(fields: [institutionId], references: [id])
+  status        Boolean             @default(true)
+}
+
+
+model CommentReply {
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  commentId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  comment   Comment   @relation(fields: [commentId], references: [id])
+  reactions CommentReaction[]
+
+}
+
+
+model CommentReaction {
+  id         Int          @id @default(autoincrement())
+  userId     Int
+  commentId  Int?
+  replyId    Int?
+  isLike     Boolean      // true for like, false for dislike
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  user       User         @relation(fields: [userId], references: [id])
+  comment    Comment?     @relation(fields: [commentId], references: [id])
+  reply      CommentReply? @relation(fields: [replyId], references: [id])
+
+    @@unique([userId, replyId])  // For reply reactions
+  @@unique([userId, commentId])  // For comment reactions
+}
+
+model Evidence {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String    @db.Text
+  fileUrl       String?
+  status        EvidenceStatus @default(PENDING)
+  verifiedAt    DateTime?
+  verifiedBy    Int?
+  userId        Int
+  nomineeId     Int?
+  institutionId Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  user          User      @relation(fields: [userId], references: [id])
+  verifier      User?     @relation("EvidenceVerifier", fields: [verifiedBy], references: [id])
+  nominee       Nominee?  @relation(fields: [nomineeId], references: [id])
+  institution   Institution? @relation(fields: [institutionId], references: [id])
+  
+  @@index([status])
+  @@index([userId])
+  @@index([nomineeId])
+  @@index([institutionId])
+}
+
+enum EvidenceStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  FLAGGED
+}
+
+model Scandal {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String    @db.Text
+  sourceUrl     String?
+  nomineeId     Int?
+  institutionId Int?
+  verified      Boolean   @default(false)
+  createdBy     Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  author        User      @relation(fields: [createdBy], references: [id])
+  nominee       Nominee?  @relation(fields: [nomineeId], references: [id])
+  institution   Institution? @relation(fields: [institutionId], references: [id])
+  
+  @@index([nomineeId])
+  @@index([institutionId])
+  @@index([createdBy])
+}
