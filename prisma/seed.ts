@@ -1,33 +1,71 @@
 // prisma/seed.ts
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserRole } from "@prisma/client"; 
 import { faker } from "@faker-js/faker";
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
     console.log("Starting database seeding...");
 
-// Check if data already exists
-const userCount = await prisma.user.count();
-if (userCount > 0) {
-    console.log('Database already seeded, skipping...');
-    return;
-}
+    // Check if data already exists
+    const userCount = await prisma.user.count();
+    if (userCount > 0) {
+        console.log('Database already seeded, skipping...');
+        return;
+    }
 
-    // Seed Users
+    // Seed Users with hashed passwords
     console.log("Seeding users...");
     const users = await Promise.all(
         [
-            { name: 'Alice Johnson', email: 'alice@example.com', password: 'password123' },
-            { name: 'Bob Smith', email: 'bob@example.com', password: 'password123' },
-            { name: 'Charlie Brown', email: 'charlie@example.com', password: 'password123' },
-            { name: 'Diana Prince', email: 'diana@example.com', password: 'password123' },
-            { name: 'Eve Adams', email: 'eve@example.com', password: 'password123' },
-        ].map((userData) =>
-            prisma.user.create({
-                data: userData,
-            })
-        )
+            // Admin user
+            {
+                name: 'Admin User',
+                email: 'admin@example.com',
+                password: 'admin123',
+                role: UserRole.ADMIN
+            },
+            // Regular users
+            {
+                name: 'Alice Johnson',
+                email: 'alice@example.com',
+                password: 'password123',
+                role: UserRole.USER 
+            },
+            {
+                name: 'Bob Smith',
+                email: 'bob@example.com',
+                password: 'password123',
+                role: UserRole.USER 
+            },
+            {
+                name: 'Charlie Brown',
+                email: 'charlie@example.com',
+                password: 'password123',
+                role: UserRole.USER 
+            },
+            {
+                name: 'Diana Prince',
+                email: 'diana@example.com',
+                password: 'password123',
+                role: UserRole.USER 
+            },
+            {
+                name: 'Eve Adams',
+                email: 'eve@example.com',
+                password: 'password123',
+                role: UserRole.USER 
+            },
+        ].map(async (userData) => {
+            const hashedPassword = await bcrypt.hash(userData.password, 12);
+            return prisma.user.create({
+                data: {
+                    ...userData,
+                    password: hashedPassword,
+                },
+            });
+        })
     );
 
     // Seed Districts
@@ -66,51 +104,51 @@ if (userCount > 0) {
     console.log("Seeding positions...");
     const positions = await Promise.all(
         ['Cabinet Secretary', 'Minister', 'Mayor', 'County Governor', 'Managing Director']
-        .map((name) =>
-            prisma.position.create({
-                data: { name },
-            })
-        )
+            .map((name) =>
+                prisma.position.create({
+                    data: { name },
+                })
+            )
     );
 
     // Seed Nominees
     console.log("Seeding nominees...");
     const nominees = await Promise.all(
         [
-            { 
+            {
                 name: 'John Doe',
                 position: { connect: { id: positions[0].id } },
                 institution: { connect: { id: institutions[0].id } },
                 district: { connect: { id: districts[0].id } },
-                status: true 
+                status: true
             },
-            { 
+            {
                 name: 'Jane Smith',
                 position: { connect: { id: positions[1].id } },
                 institution: { connect: { id: institutions[1].id } },
                 district: { connect: { id: districts[1].id } },
-                status: false 
+                status: false
             },
-            { 
+            {
                 name: 'Paul Johnson',
                 position: { connect: { id: positions[2].id } },
                 institution: { connect: { id: institutions[2].id } },
                 district: { connect: { id: districts[2].id } },
-                status: true 
+                status: true
             },
-            { 
+            {
                 name: 'Emily Davis',
                 position: { connect: { id: positions[3].id } },
                 institution: { connect: { id: institutions[3].id } },
                 district: { connect: { id: districts[3].id } },
-                status: false 
+                status: false
             },
-            { 
+            {
                 name: 'Michael Brown',
                 position: { connect: { id: positions[4].id } },
                 institution: { connect: { id: institutions[4].id } },
                 district: { connect: { id: districts[4].id } },
-                status: true 
+                status: true
             },
         ].map((nomineeData) =>
             prisma.nominee.create({
@@ -122,10 +160,10 @@ if (userCount > 0) {
     // Seed Departments
     console.log("Seeding departments...");
     const departments = await Promise.all([
-        'Finance', 'Health', 'Legal', 'Licensing', 'Procurement', 'Revenue', 
-        'Public Services', 'Human Resources', 'Treasury', 'Urban Planning', 
+        'Finance', 'Health', 'Legal', 'Licensing', 'Procurement', 'Revenue',
+        'Public Services', 'Human Resources', 'Treasury', 'Urban Planning',
         'Social Services', 'Development Projects'
-    ].map((name) => 
+    ].map((name) =>
         prisma.department.create({
             data: { name }
         })
@@ -134,9 +172,9 @@ if (userCount > 0) {
     // Seed Impact Areas
     console.log("Seeding impact areas...");
     const impactAreas = await Promise.all([
-        'Financial', 'Healthcare', 'Legal System', 'Infrastructure', 
+        'Financial', 'Healthcare', 'Legal System', 'Infrastructure',
         'Education', 'Public Safety', 'Environment', 'Economic Development'
-    ].map((name) => 
+    ].map((name) =>
         prisma.impactArea.create({
             data: { name }
         })
@@ -280,7 +318,7 @@ if (userCount > 0) {
     ].map(async (category) => {
         const selectedImpactAreas = faker.helpers.arrayElements(impactAreas, 2);
         const selectedDepartments = faker.helpers.arrayElements(departments, 2);
-        
+
         return prisma.institutionRatingCategory.create({
             data: {
                 ...category,
@@ -420,7 +458,7 @@ if (userCount > 0) {
     ].map(async (category) => {
         const selectedImpactAreas = faker.helpers.arrayElements(impactAreas, 2);
         const selectedDepartments = faker.helpers.arrayElements(departments, 2);
-        
+
         return prisma.ratingCategory.create({
             data: {
                 ...category,
@@ -439,7 +477,7 @@ if (userCount > 0) {
     for (const nominee of nominees) {
         for (let i = 0; i < 3; i++) {
             const comment = faker.lorem.sentence();
-            
+
             try {
                 // Create NomineeRating
                 await prisma.nomineeRating.create({

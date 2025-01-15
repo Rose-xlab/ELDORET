@@ -9,17 +9,22 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum UserRole{
+  USER
+  ADMIN
+}
+
 model User {
   id        Int                 @id @default(autoincrement())
   name      String
   email     String              @unique
   password  String
   image     String?
+   role      UserRole               @default(USER)  // Add this line
   nominated NomineeRating[]
   reported  InstitutionRating[]
   createdAt DateTime            @default(now())
   comments  Comment[]
-  // Add these new relations
   commentReplies CommentReply[]
   reactions      CommentReaction[]
   submittedEvidence Evidence[]
