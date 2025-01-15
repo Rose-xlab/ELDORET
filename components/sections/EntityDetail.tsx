@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { AuthModal } from "@/components/AuthModal";
+import { useAuth } from '@/lib/auth-context';
 import DetailedRatingSection from "@/components/ratings/DetailedRatingSection";
 import { CommentSection } from "@/components/comments/CommentSection";
 import { ScandalsSection } from "./ScandalsSection";
@@ -112,6 +114,7 @@ export function EntityDetail({
   onSubmitComment,
   onReact,
 }: EntityDetailProps) {
+  const { isAuthenticated } = useAuth();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showOfficialsModal, setShowOfficialsModal] = useState(false);
@@ -119,6 +122,10 @@ export function EntityDetail({
   const rankDisplay = entity.overallRank
     ? `#${entity.overallRank}`
     : "Not ranked";
+
+  const handleVoteClick = () => {
+    setShowRatingModal(true);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -180,12 +187,26 @@ export function EntityDetail({
                 {entity.rating.length}{" "}
                 {entity.rating.length === 1 ? "rating" : "ratings"}
               </span>
-              <Button
-                onClick={() => setShowRatingModal(true)}
-                className="bg-red-600 hover:bg-red-700 text-white"
-              >
-                Vote
-              </Button>
+              {isAuthenticated ? (
+                <Button
+                  onClick={handleVoteClick}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Vote
+                </Button>
+              ) : (
+                <AuthModal
+                  trigger={
+                    <Button
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Vote
+                    </Button>
+                  }
+                  mode="rating"
+                  onSuccess={handleVoteClick}
+                />
+              )}
             </div>
           </div>
         </div>
