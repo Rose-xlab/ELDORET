@@ -320,41 +320,41 @@ export default function NomineePage() {
     }
   };
 
-  const handleReaction = async (commentId: number, isLike: boolean, isReply?: boolean): Promise<void> => {
-    if (!nominee) return;
+  const handleReaction = async (commentId: number, isLike: boolean): Promise<void> => {
+  if (!nominee) return;
 
-    try {
-      const response = await fetch(`/api/comments/${commentId}/replies`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isLike, isReply })
-      });
+  try {
+    const response = await fetch(`/api/comments/${commentId}/reactions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isLike })
+    });
 
-      if (!response.ok) throw new Error('Failed to update reaction');
+    if (!response.ok) throw new Error('Failed to update reactions');
 
-      const commentsRes = await fetch(`/api/nominees/${params.id}/comments`);
-      if (!commentsRes.ok) throw new Error('Failed to fetch updated comments');
+    const commentsRes = await fetch(`/api/nominees/${params.id}/comments`);
+    if (!commentsRes.ok) throw new Error('Failed to fetch updated comments');
 
-      const commentsData = await commentsRes.json();
-      const transformedComments = (commentsData as DatabaseComment[])
-        .map(transformToComponentComment);
+    const commentsData = await commentsRes.json();
+    const transformedComments = (commentsData as DatabaseComment[])
+      .map(transformToComponentComment);
 
-      setNominee(prev => 
-        prev ? { 
-          ...prev, 
-          comments: transformedComments 
-        } : null
-      );
-    } catch (error) {
-      console.error('Error handling reaction:', error);
-      setError(error instanceof Error ? error.message : "Failed to update reaction");
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update reaction"
-      });
-    }
-  };
+    setNominee(prev =>
+      prev ? {
+        ...prev,
+        comments: transformedComments
+      } : null
+    );
+  } catch (error) {
+    console.error('Error handling reaction:', error);
+    setError(error instanceof Error ? error.message : "Failed to update reaction");
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Failed to update reaction"
+    });
+  }
+};
 
   if (loading) return <LoadingScreen />;
   if (error) return (
