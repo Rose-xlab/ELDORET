@@ -8,6 +8,8 @@ export async function logout() {
         'Content-Type': 'application/json',
       },
     });
+    // Remove token from localStorage
+    window.localStorage.removeItem('token');
 
     // Trigger storage event for auth state sync
     window.localStorage.setItem('auth', Date.now().toString());
