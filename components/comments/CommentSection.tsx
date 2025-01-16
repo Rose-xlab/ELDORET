@@ -78,7 +78,7 @@ const CommentComponent: React.FC<{
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/comments/${comment.id}/reactions`, {
+      const response = await fetch(`/api/comments/${comment.id}/replies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: replyContent }),
