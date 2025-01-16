@@ -121,36 +121,36 @@ function transformToComponentComment(comment: DatabaseComment): ComponentComment
     id: comment.id,
     content: comment.content,
     userId: String(comment.userId), // Convert to string for component
-    createdAt: comment.createdAt.toISOString(),
+    createdAt: new Date(comment.createdAt).toISOString(), // Convert to Date object
     user: {
       id: comment.user.id,
       name: comment.user.name,
       image: comment.user.image || undefined
     },
-    replies: comment.replies.map(reply => ({
+    replies: (comment.replies || []).map(reply => ({
       id: reply.id,
       content: reply.content,
       userId: String(reply.userId),
-      createdAt: reply.createdAt.toISOString(),
+      createdAt: new Date(reply.createdAt).toISOString(), // Convert to Date object
       user: {
         id: reply.user.id,
         name: reply.user.name,
         image: reply.user.image || undefined
       },
-      reactions: reply.reactions.map(r => ({
+      reactions: (reply.reactions || []).map(r => ({
         id: r.id,
         userId: r.userId,
         isLike: r.isLike,
-        createdAt: r.createdAt.toISOString()
+        createdAt: new Date(r.createdAt).toISOString() // Convert to Date object
       })),
-      likes: reply.reactions.filter(r => r.isLike).length,
-      dislikes: reply.reactions.filter(r => !r.isLike).length,
-      userReaction: reply.reactions.find(r => r.userId === 1)?.isLike,
+      likes: (reply.reactions || []).filter(r => r.isLike).length,
+      dislikes: (reply.reactions || []).filter(r => !r.isLike).length,
+      userReaction: reply.reactions?.find(r => r.userId === 1)?.isLike,
       replies: []
     })),
-    likes: comment.reactions.filter(r => r.isLike).length,
-    dislikes: comment.reactions.filter(r => !r.isLike).length,
-    userReaction: comment.reactions.find(r => r.userId === 1)?.isLike
+    likes: (comment.reactions || []).filter(r => r.isLike).length,
+    dislikes: (comment.reactions || []).filter(r => !r.isLike).length,
+    userReaction: comment.reactions?.find(r => r.userId === 1)?.isLike
   };
 }
 
@@ -281,29 +281,34 @@ export default function NomineePage() {
 
     try {
       setError(null);
-      const result = await submitComment(
-        1,
-        content,
-        'nominee',
-        nominee.id,
-        parentId
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: 1,
+          content,
+          entityType: 'nominee',
+          entityId: nominee.id,
+          parentId,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to post comment');
+
+      const result = await response.json();
+      const transformedComment = transformToComponentComment(result as DatabaseComment);
+
+      setNominee(prev =>
+        prev ? {
+          ...prev,
+          comments: [transformedComment, ...prev.comments]
+        } : null
       );
 
-      if (result) {
-        const transformedComment = transformToComponentComment(result as DatabaseComment);
-
-        setNominee(prev => 
-          prev ? {
-            ...prev,
-            comments: [transformedComment, ...prev.comments]
-          } : null
-        );
-
-        toast({
-          title: "Success",
-          description: "Comment posted successfully"
-        });
-      }
+      toast({
+        title: "Success",
+        description: "Comment posted successfully"
+      });
     } catch (error) {
       console.error('Error posting comment:', error);
       setError(error instanceof Error ? error.message : "Failed to post comment");
