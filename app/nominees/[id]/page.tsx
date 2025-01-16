@@ -324,7 +324,7 @@ export default function NomineePage() {
     if (!nominee) return;
 
     try {
-      const response = await fetch(`/api/comments/${commentId}/reactions`, {
+      const response = await fetch(`/api/comments/${commentId}/replies`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isLike, isReply })

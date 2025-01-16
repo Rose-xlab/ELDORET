@@ -1,15 +1,15 @@
 // components/comments/CommentSection.tsx
-import React, { useState, useCallback } from 'react';
-import { useAuth } from '@/lib/auth-context';
-import { Avatar } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { AuthModal } from '@/components/AuthModal';
-import { formatDistanceToNow } from 'date-fns';
-import { ThumbsUp, ThumbsDown, Reply, MessageCircle } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import Image from 'next/image';
+import React, { useState, useCallback } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { AuthModal } from "@/components/AuthModal";
+import { formatDistanceToNow } from "date-fns";
+import { ThumbsUp, ThumbsDown, Reply, MessageCircle } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -40,16 +40,24 @@ interface Comment {
 
 interface CommentSectionProps {
   entityId: number;
-  entityType: 'nominee' | 'institution';
+  entityType: "nominee" | "institution";
   comments?: Comment[];
   onSubmitComment: (content: string, parentId?: number) => Promise<void>;
-  onReact: (commentId: number, isLike: boolean, isReply?: boolean) => Promise<void>;
+  onReact: (
+    commentId: number,
+    isLike: boolean,
+    isReply?: boolean,
+  ) => Promise<void>;
 }
 
 const CommentComponent: React.FC<{
   comment: Comment;
   isReply?: boolean;
-  onReaction: (commentId: number, isLike: boolean, isReply: boolean) => Promise<void>;
+  onReaction: (
+    commentId: number,
+    isLike: boolean,
+    isReply: boolean,
+  ) => Promise<void>;
   onSubmitReply: (content: string, commentId: number) => Promise<void>;
   isAuthenticated: boolean;
 }> = ({
@@ -57,10 +65,10 @@ const CommentComponent: React.FC<{
   isReply = false,
   onReaction,
   onSubmitReply,
-  isAuthenticated
+  isAuthenticated,
 }) => {
   const { toast } = useToast();
-  const [replyContent, setReplyContent] = useState('');
+  const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
 
@@ -70,18 +78,26 @@ const CommentComponent: React.FC<{
 
     setIsSubmitting(true);
     try {
-      await onSubmitReply(replyContent, comment.id);
-      setReplyContent('');
+      const response = await fetch(`/api/comments/${comment.id}/replies`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: replyContent }),
+      });
+
+      if (!response.ok) throw new Error("Failed to post reply");
+
+      const newReply = await response.json();
+      setReplyContent("");
       setShowReplyForm(false);
       toast({
         title: "Success",
-        description: "Reply posted successfully"
+        description: "Reply posted successfully",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to post reply"
+        description: "Failed to post reply",
       });
     } finally {
       setIsSubmitting(false);
@@ -89,7 +105,7 @@ const CommentComponent: React.FC<{
   };
 
   return (
-    <Card className={`p-4 ${isReply ? 'ml-8 mt-2' : ''}`}>
+    <Card className={`p-4 ${isReply ? "ml-8 mt-2" : ""}`}>
       <div className="flex items-start gap-4">
         <Avatar className="w-10 h-10">
           <Image
@@ -106,7 +122,9 @@ const CommentComponent: React.FC<{
             <div>
               <span className="font-medium">{comment.user.name}</span>
               <span className="text-sm text-gray-500 ml-2">
-                {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                {formatDistanceToNow(new Date(comment.createdAt), {
+                  addSuffix: true,
+                })}
               </span>
             </div>
           </div>
@@ -118,7 +136,7 @@ const CommentComponent: React.FC<{
               variant="ghost"
               size="sm"
               onClick={() => onReaction(comment.id, true, isReply)}
-              className={comment.userReaction === true ? 'text-blue-600' : ''}
+              className={comment.userReaction === true ? "text-blue-600" : ""}
             >
               <ThumbsUp className="w-4 h-4 mr-1" />
               {comment.likes}
@@ -128,7 +146,7 @@ const CommentComponent: React.FC<{
               variant="ghost"
               size="sm"
               onClick={() => onReaction(comment.id, false, isReply)}
-              className={comment.userReaction === false ? 'text-red-600' : ''}
+              className={comment.userReaction === false ? "text-red-600" : ""}
             >
               <ThumbsDown className="w-4 h-4 mr-1" />
               {comment.dislikes}
@@ -166,7 +184,7 @@ const CommentComponent: React.FC<{
                   type="submit"
                   disabled={isSubmitting || !replyContent.trim()}
                 >
-                  {isSubmitting ? 'Posting...' : 'Post Reply'}
+                  {isSubmitting ? "Posting..." : "Post Reply"}
                 </Button>
               </div>
             </form>
@@ -201,7 +219,7 @@ export function CommentSection({
 }: CommentSectionProps) {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentList, setCommentList] = useState<Comment[]>(comments);
 
@@ -211,61 +229,60 @@ export function CommentSection({
 
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/comments', {
-        method: 'POST',
+      const response = await fetch("/api/comments", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           content: newComment,
           userId: 1, // Replace with actual user ID
-          nomineeId: entityType === 'nominee' ? entityId : undefined,
-          institutionId: entityType === 'institution' ? entityId : undefined,
+          nomineeId: entityType === "nominee" ? entityId : undefined,
+          institutionId: entityType === "institution" ? entityId : undefined,
         }),
       });
 
       const newCommentData = await response.json();
       setCommentList([newCommentData, ...commentList]);
-      setNewComment('');
+      setNewComment("");
       toast({
         title: "Success",
-        description: "Comment posted successfully"
+        description: "Comment posted successfully",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to post comment"
+        description: "Failed to post comment",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleReaction = useCallback(async (
-    commentId: number,
-    isLike: boolean,
-    isReply: boolean
-  ) => {
-    if (!isAuthenticated) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Required",
-        description: "Please sign in to react to comments"
-      });
-      return;
-    }
+  const handleReaction = useCallback(
+    async (commentId: number, isLike: boolean, isReply: boolean) => {
+      if (!isAuthenticated) {
+        toast({
+          variant: "destructive",
+          title: "Authentication Required",
+          description: "Please sign in to react to comments",
+        });
+        return;
+      }
 
-    try {
-      await onReact(commentId, isLike, isReply);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update reaction"
-      });
-    }
-  }, [isAuthenticated, onReact, toast]);
+      try {
+        await onReact(commentId, isLike, isReply);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update reaction",
+        });
+      }
+    },
+    [isAuthenticated, onReact, toast],
+  );
 
   return (
     <div className="space-y-6">
@@ -288,7 +305,7 @@ export function CommentSection({
             disabled={isSubmitting || !newComment.trim()}
             className="w-full bg-[#006600] hover:bg-[#005500] text-white"
           >
-            {isSubmitting ? 'Posting...' : 'Post Comment'}
+            {isSubmitting ? "Posting..." : "Post Comment"}
           </Button>
         </form>
       ) : (
