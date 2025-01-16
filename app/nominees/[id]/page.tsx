@@ -285,10 +285,10 @@ export default function NomineePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 1,
+          // userId: 1,
           content,
           entityType: 'nominee',
-          entityId: nominee.id,
+          nomineeId: nominee.id,
           parentId,
         }),
       });
