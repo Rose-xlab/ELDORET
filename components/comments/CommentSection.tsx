@@ -1,5 +1,4 @@
-// components/comments/CommentSection.tsx
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -138,8 +137,7 @@ const CommentComponent: React.FC<{
               onClick={() => onReaction(comment.id, true, isReply)}
               className={comment.userReaction === true ? "text-blue-600" : ""}
             >
-              <ThumbsUp className="w-4 h-4 mr-1" />
-              {comment.likes}
+              {comment.likes} <ThumbsUp className="w-4 h-4 ml-1" />
             </Button>
 
             <Button
@@ -148,8 +146,7 @@ const CommentComponent: React.FC<{
               onClick={() => onReaction(comment.id, false, isReply)}
               className={comment.userReaction === false ? "text-red-600" : ""}
             >
-              <ThumbsDown className="w-4 h-4 mr-1" />
-              {comment.dislikes}
+              {comment.dislikes} <ThumbsDown className="w-4 h-4 ml-1" />
             </Button>
 
             {!isReply && isAuthenticated && (
@@ -222,6 +219,22 @@ export function CommentSection({
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentList, setCommentList] = useState<Comment[]>(comments);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`/api/comments?${entityType}Id=${entityId}`);
+        if (!response.ok) throw new Error("Failed to fetch comments");
+
+        const data = await response.json();
+        setCommentList(data.data);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, [entityId, entityType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
