@@ -60,33 +60,50 @@ const UsersDashboard: React.FC = () => {
           onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
           className="mr-2"
         />
-        <Button onClick={handleCreateUser} className="mt-2">Create</Button>
+        <Button onClick={handleCreateUser} className="mt-2">
+          Create
+        </Button>
       </Card>
       <Card>
         <h2 className="text-xl text-black font-semibold">Users</h2>
         <table className="min-w-full bg-white">
-  <thead>
-    <tr>
-      <th className="py-2 text-black text-left">ID</th>
-      <th className="py-2 text-black text-left">Name</th>
-      <th className="py-2 text-black text-left">Email</th>
-      <th className="py-2 text-black text-left">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {users.map((user) => (
-      <tr key={user.id}>
-        <td className="py-2 text-black text-left">{user.id}</td>
-        <td className="py-2 text-black text-left">{user.name}</td>
-        <td className="py-2 text-black text-left">{user.email}</td>
-        <td className="py-2 text-black text-left">
-          <Button onClick={() => handleUpdateUser(user.id, { name: 'Updated Name' })} variant="secondary" className="mr-2">Update</Button>
-          <Button onClick={() => handleDeleteUser(user.id)} variant="secondary">Delete</Button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+          <thead>
+            <tr>
+              <th className="py-2 text-black text-left">ID</th>
+              <th className="py-2 text-black text-left">Name</th>
+              <th className="py-2 text-black text-left">Email</th>
+              <th className="py-2 text-black text-left">Role</th>
+              <th className="py-2 text-black text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td className="py-2 text-black text-left">{user.id}</td>
+                <td className="py-2 text-black text-left">{user.name}</td>
+                <td className="py-2 text-black text-left">{user.email}</td>
+                <td className="py-2 text-black text-left">{user.role}</td>
+                <td className="py-2 text-black text-left">
+                  <Button
+                    onClick={() =>
+                      handleUpdateUser(user.id, { name: "Updated Name" })
+                    }
+                    variant="secondary"
+                    className="mr-2"
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteUser(user.id)}
+                    variant="secondary"
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Card>
     </div>
   );

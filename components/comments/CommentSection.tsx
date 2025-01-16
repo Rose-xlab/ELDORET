@@ -121,9 +121,8 @@ const CommentComponent: React.FC<{
             <div>
               <span className="font-medium">{comment.user.name}</span>
               <span className="text-sm text-gray-500 ml-2">
-                {formatDistanceToNow(new Date(comment.createdAt), {
-                  addSuffix: true,
-                })}
+                  {comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : "Invalid date"}
+
               </span>
             </div>
           </div>
