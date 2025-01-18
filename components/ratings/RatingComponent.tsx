@@ -132,13 +132,16 @@ export function RatingComponent({
       setRatings({});
       setComments({});
       setOverallComment('');
-      
-      if (onClose) onClose();
 
       toast({
         title: "Success",
         description: "Ratings submitted successfully"
       });
+      // Close the modal if onClose is provided
+      if (onClose) onClose();
+
+      // Refresh the page to update the ratings display
+      window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -174,6 +177,13 @@ export function RatingComponent({
     );
   };
 
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Only close if the overlay itself (not its children) was clicked
+    if (event.target === event.currentTarget) {
+      onClose?.();
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <AuthModal
@@ -199,9 +209,23 @@ export function RatingComponent({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      onClick={handleOverlayClick}
+    >
       <Card className="w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-6">Submit Rating</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Submit Rating</h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8 rounded-full"
+          >
+            ✕
+          </Button>
+        </div>
+
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
           <div className="space-y-2">
             <label className="font-medium">Overall Comment (Optional)</label>
@@ -253,9 +277,9 @@ export function RatingComponent({
 
           <div className="flex justify-end gap-4">
             {onClose && (
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={onClose}
               >
                 Cancel

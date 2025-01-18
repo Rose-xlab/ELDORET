@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth } from '@/lib/auth-context';
 import { LogIn, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface AuthModalProps {
   trigger: React.ReactElement;
@@ -21,7 +22,6 @@ interface AuthModalProps {
   onSuccess?: () => void;
 }
 
-// Helper function to get the appropriate text based on mode
 function getModeText(mode: AuthModalProps['mode']) {
   switch (mode) {
     case "rating":
@@ -36,12 +36,35 @@ function getModeText(mode: AuthModalProps['mode']) {
 }
 
 export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const modeText = getModeText(mode);
+
+  const handleAuthSuccess = async (token: string) => {
+    try {
+      // Update the token in your auth system
+      await login(token);
+
+      // Close the modal
+      setIsOpen(false);
+
+      // Call success callback if provided
+      if (onSuccess) onSuccess();
+
+      // Force a revalidation of any data that depends on auth state
+      router.refresh();
+
+      // Force a full page refresh to ensure all components pick up the new auth state
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating auth state:', error);
+      setError('Failed to complete authentication. Please try again.');
+    }
+  };
 
   const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -50,7 +73,7 @@ export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProp
 
     const formData = new FormData(event.currentTarget);
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    
+
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -67,9 +90,10 @@ export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProp
         throw new Error(error.error);
       }
 
+      const { token } = await response.json();
+
       if (isLogin) {
-        const { token } = await response.json();
-        login(token);
+        await handleAuthSuccess(token);
       } else {
         // After registration, automatically log them in
         const loginResponse = await fetch('/api/auth/login', {
@@ -80,12 +104,12 @@ export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProp
             password: formData.get('password'),
           }),
         });
-        const { token } = await loginResponse.json();
-        login(token);
-      }
 
-      setIsOpen(false);
-      if (onSuccess) onSuccess();
+        if (!loginResponse.ok) throw new Error('Failed to login after registration');
+
+        const { token: loginToken } = await loginResponse.json();
+        await handleAuthSuccess(loginToken);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Something went wrong');
     } finally {
@@ -114,7 +138,7 @@ export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProp
             )}
           </DialogTitle>
           <DialogDescription>
-            {isLogin 
+            {isLogin
               ? `You need to sign in to ${modeText.action} this ${modeText.item}.`
               : "Join our community to share your feedback and help fight corruption."}
           </DialogDescription>
@@ -171,8 +195,8 @@ export function AuthModal({ trigger, mode = "rating", onSuccess }: AuthModalProp
               className="w-full"
               disabled={loading}
             >
-              {loading 
-                ? (isLogin ? 'Signing in...' : 'Creating account...') 
+              {loading
+                ? (isLogin ? 'Signing in...' : 'Creating account...')
                 : (isLogin ? 'Sign In' : 'Create Account')}
             </Button>
             <div className="text-center text-sm">
