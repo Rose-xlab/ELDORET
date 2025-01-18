@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthButton } from "@/components/auth-button";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
@@ -266,6 +268,8 @@ export default function RootLayout({
                     </div>
                   </footer>
                 </div>
+                <SpeedInsights />
+                <Analytics />
               </StatsProvider>
             </SearchProvider>
           </AuthProvider>
