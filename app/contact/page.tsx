@@ -21,7 +21,7 @@ export default function ContactPage() {
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
             <p className="text-xl text-gray-300">
-              Have questions or concerns? We're here to help.
+              Have questions or concerns? We are here to help.
             </p>
           </div>
         </div>
