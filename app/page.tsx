@@ -145,6 +145,63 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Trending Section */}
+      {!loading && (
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Trending Corrupt Officials */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Trending Corrupt Officials
+                </CardTitle>
+                <Link href="/nominees">
+                  <Button variant="ghost">
+                    View All
+                    <ChevronRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {trendingNominees.map(nominee => (
+                  <TrendingCard
+                    key={nominee.id}
+                    entity={nominee}
+                    type="nominee"
+                  />
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Trending Corrupt Institutions */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Trending Corrupt Institutions
+                </CardTitle>
+                <Link href="/institutions">
+                  <Button variant="ghost">
+                    View All
+                    <ChevronRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {trendingInstitutions.map(institution => (
+                  <TrendingCard
+                    key={institution.id}
+                    entity={institution}
+                    type="institution"
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
       {/* Features Grid */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -207,106 +264,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Trending Section */}
-      {!loading && (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid gap-8 md:grid-cols-2">
-            {/* Trending Officials */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Trending Officials
-                </CardTitle>
-                <Link href="/nominees">
-                  <Button variant="ghost">
-                    View All
-                    <ChevronRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {trendingNominees.map(nominee => (
-                  <TrendingCard
-                    key={nominee.id}
-                    entity={nominee}
-                    type="nominee"
-                  />
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Trending Institutions */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Trending Institutions
-                </CardTitle>
-                <Link href="/institutions">
-                  <Button variant="ghost">
-                    View All
-                    <ChevronRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {trendingInstitutions.map(institution => (
-                  <TrendingCard
-                    key={institution.id}
-                    entity={institution}
-                    type="institution"
-                  />
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
-
-      {/* Recent Activity Section */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 border-b last:border-0">
-                <div className="relative w-12 h-12">
-                  <Image
-                    src="/placeholder-avatar.png"
-                    alt="User avatar"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p>
-                    <span className="font-medium">John Doe</span>
-                    {' '}
-                    rated
-                    {' '}
-                    <Link
-                      href="/nominees/1"
-                      className="font-medium hover:underline"
-                    >
-                      Example Official
-                    </Link>
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span>4/5</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {new Date().toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Why Use This Platform Section */}
       <div className="bg-slate-50 py-16">
@@ -328,7 +285,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Community Driven</h3>
                 <p className="text-gray-600">
-                  Join thousands of citizens working together to expose and fight corruption through transparent reporting.
+                  Join thousands of Kenyans working together to expose and fight corruption through transparent reporting.
                 </p>
               </CardContent>
             </Card>
@@ -340,7 +297,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Evidence Based</h3>
                 <p className="text-gray-600">
-                  Submit and view verified evidence of corruption, making sure all claims are properly documented.
+                  Submit and view verified evidence of corruption, We make sure all claims are properly documented.
                 </p>
               </CardContent>
             </Card>
@@ -352,7 +309,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Real Impact</h3>
                 <p className="text-gray-600">
-                  Make a real difference by helping to identify and expose corruption at all levels of government.
+                  Make a real difference by helping to identify and expose corruption at all levels of the Kenyan Government.
                 </p>
               </CardContent>
             </Card>

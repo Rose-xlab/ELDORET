@@ -2,9 +2,17 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Mail, Phone, Shield, AlertTriangle } from 'lucide-react';
+import { Mail, Phone, Shield, AlertTriangle, FileUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+// Replace with your actual form URL
+const EVIDENCE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdYo5iyEc7jJgFGQ5d3hM66uVd_s_59JlPReY3szX86TEHXuA/viewform?usp=sharing';
 
 export default function SubmitPage() {
+  const handleSubmitClick = () => {
+    window.open(EVIDENCE_FORM_URL, '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -14,9 +22,17 @@ export default function SubmitPage() {
             <h1 className="text-4xl font-bold mb-4">
               Report Corruption
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-300 mb-8">
               Help us fight corruption by reporting incidents. Your identity will be protected.
             </p>
+            <Button 
+              onClick={handleSubmitClick}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg rounded-lg flex items-center gap-2"
+            >
+              <FileUp className="w-6 h-6" />
+              Report Coruption
+              <Shield className="w-5 h-5 ml-2 opacity-75" />
+            </Button>
           </div>
         </div>
       </div>
