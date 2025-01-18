@@ -8,6 +8,7 @@ import { AuthModal } from '@/components/AuthModal';
 export interface EvidenceSubmissionProps {
   type: 'nominee' | 'institution';
   entityId: number;
+onSuccess?: () => void; 
 }
 
 // Replace this URL with your actual Google Form or JotForm URL
