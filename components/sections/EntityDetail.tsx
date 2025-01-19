@@ -130,33 +130,28 @@ export function EntityDetail({
   return (
     <div className="max-w-7xl mx-auto px-4 py-4 md:py-8">
       <Card className="mb-6 md:mb-8 p-4 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
-          {/* Image section */}
-          <div className="relative w-20 h-20 md:w-32 md:h-32 shrink-0">
-            {entity.image ? (
-              <Image
-                src={entity.image}
-                alt={entity.name}
-                fill
-                className="object-cover rounded-lg"
-                priority
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-400 text-xl">{entity.name[0]}</span>
-              </div>
-            )}
-          </div>
+        <div className="flex justify-between items-start mb-4">
+          {/* Image and content wrapper */}
+          <div className="flex flex-1 gap-4 md:gap-6">
+            {/* Image section */}
+            <div className="relative w-20 h-20 md:w-32 md:h-32 shrink-0">
+              {entity.image ? (
+                <Image
+                  src={entity.image}
+                  alt={entity.name}
+                  fill
+                  className="object-cover rounded-lg"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                  <span className="text-gray-400 text-xl">{entity.name[0]}</span>
+                </div>
+              )}
+            </div>
 
-          {/* Content section */}
-          <div className="flex-1 min-w-0">
-            {/* Overall Rank on top */}
-            <div className="flex flex-col gap-2">
-              <div className="text-right">
-                <span className="text-blue-600 text-lg md:text-xl font-bold">{rankDisplay}</span>
-                <div className="text-xs md:text-sm text-gray-500">Overall Rank</div>
-              </div>
-
+            {/* Content section */}
+            <div className="flex-1 min-w-0">
               {/* Title and details */}
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold">{entity.name}</h1>
@@ -178,46 +173,57 @@ export function EntityDetail({
                   )}
                 </div>
               </div>
-            </div>
 
-            {/* Description */}
-            {entity.description && (
-              <p className="mt-2 text-gray-600 text-sm md:text-base">{entity.description}</p>
-            )}
+              {/* Description */}
+              {entity.description && (
+                <p className="mt-2 text-gray-600 text-sm md:text-base">{entity.description}</p>
+              )}
 
-            {/* Rating and vote section */}
-            <div className="mt-4 flex flex-wrap items-center gap-3 md:gap-4">
-              <div className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm md:text-base">
-                <span className="font-semibold">
-                  {calculateAverageRating(entity.rating)}
-                </span>
-                /5
-              </div>
-              <span className="text-gray-600 text-sm md:text-base">
-                {entity.rating.length} {entity.rating.length === 1 ? "rating" : "ratings"}
-              </span>
-              {isAuthenticated ? (
-                <Button
-                  onClick={handleVoteClick}
-                  className="bg-red-500 hover:bg-red-600 text-white ml-auto md:ml-0"
-                >
-                  Vote
-                </Button>
-              ) : (
-                <AuthModal
-                  trigger={
-                    <Button className="bg-red-500 hover:bg-red-600 text-white ml-auto md:ml-0">
+              {/* Rating and vote section - Updated for better mobile layout */}
+              <div className="mt-4 flex flex-wrap items-center gap-3 md:gap-4">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm md:text-base">
+                    <span className="font-semibold">
+                      {calculateAverageRating(entity.rating)}
+                    </span>
+                    /5
+                  </div>
+                  <span className="text-gray-600 text-sm md:text-base">
+                    {entity.rating.length} {entity.rating.length === 1 ? "rating" : "ratings"}
+                  </span>
+                </div>
+                <div className="ml-auto">
+                  {isAuthenticated ? (
+                    <Button
+                      onClick={handleVoteClick}
+                      className="bg-red-500 hover:bg-red-600 text-white"
+                    >
                       Vote
                     </Button>
-                  }
-                  mode="rating"
-                  onSuccess={handleVoteClick}
-                />
-              )}
+                  ) : (
+                    <AuthModal
+                      trigger={
+                        <Button className="bg-red-500 hover:bg-red-600 text-white">
+                          Vote
+                        </Button>
+                      }
+                      mode="rating"
+                      onSuccess={handleVoteClick}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* Overall Rank - consistently positioned at top right */}
+          <div className="text-right shrink-0 ml-4">
+            <span className="text-blue-600 text-lg md:text-xl font-bold">{rankDisplay}</span>
+            <div className="text-xs md:text-sm text-gray-500">Overall Rank</div>
           </div>
         </div>
       </Card>
+
 
       <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
         <TabsList className="w-full overflow-x-auto flex flex-nowrap">

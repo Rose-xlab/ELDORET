@@ -1,22 +1,17 @@
-// components/sections/EvidenceSubmissionSection.tsx
 import { FileUp, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useAuth } from '@/lib/auth-context';
-import { AuthModal } from '@/components/AuthModal';
 
 export interface EvidenceSubmissionProps {
   type: 'nominee' | 'institution';
   entityId: number;
-onSuccess?: () => void; 
+  onSuccess?: () => void;
 }
 
 // Replace this URL with your actual Google Form or JotForm URL
 const EVIDENCE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdYo5iyEc7jJgFGQ5d3hM66uVd_s_59JlPReY3szX86TEHXuA/viewform?usp=sharing';
 
 export function EvidenceSubmissionSection({ type, entityId }: EvidenceSubmissionProps) {
-  const { isAuthenticated } = useAuth();
-
   const handleSubmitClick = () => {
     const formUrl = new URL(EVIDENCE_FORM_URL);
     formUrl.searchParams.append('entityId', entityId.toString());
@@ -38,25 +33,13 @@ export function EvidenceSubmissionSection({ type, entityId }: EvidenceSubmission
         </div>
 
         <div className="flex justify-start">
-          {isAuthenticated ? (
-            <Button 
-              onClick={handleSubmitClick}
-              className="bg-[#006600] hover:bg-[#005500] px-6"
-            >
-              <FileUp className="w-4 h-4 mr-2" />
-              Submit Evidence
-            </Button>
-          ) : (
-            <AuthModal
-              trigger={
-                <Button className="bg-[#006600] hover:bg-[#005500] px-6">
-                  <FileUp className="w-4 h-4 mr-2" />
-                  Submit Evidence
-                </Button>
-              }
-              mode="evidence"
-            />
-          )}
+          <Button
+            onClick={handleSubmitClick}
+            className="bg-[#006600] hover:bg-[#005500] px-6"
+          >
+            <FileUp className="w-4 h-4 mr-2" />
+            Submit Evidence
+          </Button>
         </div>
       </Card>
 
