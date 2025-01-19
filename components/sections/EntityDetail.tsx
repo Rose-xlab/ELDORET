@@ -128,10 +128,11 @@ export function EntityDetail({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <Card className="mb-8 p-6">
-        <div className="flex items-start gap-6">
-          <div className="relative w-32 h-32">
+    <div className="max-w-7xl mx-auto px-4 py-4 md:py-8">
+      <Card className="mb-6 md:mb-8 p-4 md:p-6">
+        <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
+          {/* Image section */}
+          <div className="relative w-20 h-20 md:w-32 md:h-32 shrink-0">
             {entity.image ? (
               <Image
                 src={entity.image}
@@ -146,60 +147,66 @@ export function EntityDetail({
               </div>
             )}
           </div>
-          <div className="flex-1">
-            <div className="flex justify-between items-start">
+
+          {/* Content section */}
+          <div className="flex-1 min-w-0">
+            {/* Overall Rank on top */}
+            <div className="flex flex-col gap-2">
+              <div className="text-right">
+                <span className="text-blue-600 text-lg md:text-xl font-bold">{rankDisplay}</span>
+                <div className="text-xs md:text-sm text-gray-500">Overall Rank</div>
+              </div>
+
+              {/* Title and details */}
               <div>
-                <h1 className="text-3xl font-bold">{entity.name}</h1>
-                <div className="mt-2 text-gray-600 flex flex-col gap-2">
+                <h1 className="text-2xl md:text-3xl font-bold">{entity.name}</h1>
+                <div className="mt-2 text-gray-600 flex flex-col gap-1.5">
                   {type === "nominee" && (
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-2 md:gap-4 text-sm md:text-base">
                       <p>{entity.position.name}</p>
-                      <p className="font-bold">{entity.institution.name}</p>
+                      <p className="font-semibold">{entity.institution.name}</p>
                     </div>
                   )}
-                  <p className="text-purple-500">{entity.district.name}</p>
+                  <p className="text-purple-500 text-sm md:text-base">{entity.district.name}</p>
                   {type === "institution" && (
-                    <p 
-                      className="text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
+                    <button 
                       onClick={() => setShowOfficialsModal(true)}
+                      className="text-gray-600 hover:text-blue-600 transition-colors text-sm md:text-base text-left"
                     >
                       {entity.nominees?.length || 0} Official(s)
-                    </p>
-                  )}
-                  {entity.description && (
-                    <p className="text-gray-600">{entity.description}</p>
+                    </button>
                   )}
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-600">{rankDisplay}</div>
-                <div className="text-sm text-gray-500">Overall Rank</div>
-              </div>
             </div>
-            <div className="mt-4 flex items-center gap-4">
-              <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+
+            {/* Description */}
+            {entity.description && (
+              <p className="mt-2 text-gray-600 text-sm md:text-base">{entity.description}</p>
+            )}
+
+            {/* Rating and vote section */}
+            <div className="mt-4 flex flex-wrap items-center gap-3 md:gap-4">
+              <div className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm md:text-base">
                 <span className="font-semibold">
                   {calculateAverageRating(entity.rating)}
                 </span>
                 /5
               </div>
-              <span className="text-gray-600">
-                {entity.rating.length}{" "}
-                {entity.rating.length === 1 ? "rating" : "ratings"}
+              <span className="text-gray-600 text-sm md:text-base">
+                {entity.rating.length} {entity.rating.length === 1 ? "rating" : "ratings"}
               </span>
               {isAuthenticated ? (
                 <Button
                   onClick={handleVoteClick}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="bg-red-500 hover:bg-red-600 text-white ml-auto md:ml-0"
                 >
                   Vote
                 </Button>
               ) : (
                 <AuthModal
                   trigger={
-                    <Button
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
+                    <Button className="bg-red-500 hover:bg-red-600 text-white ml-auto md:ml-0">
                       Vote
                     </Button>
                   }
@@ -212,12 +219,11 @@ export function EntityDetail({
         </div>
       </Card>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList>
+      <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
+        <TabsList className="w-full overflow-x-auto flex flex-nowrap">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="scandals">
-            Scandals{" "}
-            {entity.scandals?.length > 0 && `(${entity.scandals.length})`}
+            Scandals {entity.scandals?.length > 0 && `(${entity.scandals.length})`}
           </TabsTrigger>
           <TabsTrigger value="evidence">Evidence</TabsTrigger>
           <TabsTrigger value="similar">
@@ -226,7 +232,7 @@ export function EntityDetail({
         </TabsList>
 
         <TabsContent value="overview">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <div className="lg:col-span-2">
               <DetailedRatingSection
                 entity={entity}
