@@ -159,6 +159,7 @@ export function EntityDetail({
                   {type === "nominee" && (
                     <div className="flex flex-wrap gap-2 md:gap-4 text-sm md:text-base">
                       <p>{entity.position.name}</p>
+                      <p>at</p>
                       <p className="font-semibold">{entity.institution.name}</p>
                     </div>
                   )}
@@ -179,7 +180,7 @@ export function EntityDetail({
                 <p className="mt-2 text-gray-600 text-sm md:text-base">{entity.description}</p>
               )}
 
-              {/* Rating and vote section - Updated for better mobile layout */}
+              {/* Rating and vote section */}
               <div className="mt-4 flex flex-wrap items-center gap-3 md:gap-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm md:text-base">
@@ -226,7 +227,7 @@ export function EntityDetail({
 
 
       <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
-        <TabsList className="w-full overflow-x-auto flex flex-nowrap">
+        <TabsList className="w-full overflow-x-auto">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="scandals">
             Scandals {entity.scandals?.length > 0 && `(${entity.scandals.length})`}
