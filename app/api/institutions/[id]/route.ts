@@ -5,7 +5,7 @@ import redis from '@/lib/redis';
 const prisma = new PrismaClient();
 
 const CACHE_TTL = {
-  STALE: 60 * 60,    // 1 hour
+  STALE: 60 * 20,    // 1 hour
   REVALIDATE: 60,    // Check every minute for updates
   BASIC_DATA: 24 * 60 * 60  // Basic data cached for 24 hours
 };

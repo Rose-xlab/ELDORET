@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 // Longer cache times for better performance
 const CACHE_TTL = {
-  STALE: 60 * 60,    // 1 hour instead of 30 minutes
+  STALE: 60 * 10,    // 1 hour instead of 30 minutes
   REVALIDATE: 60     // Still check every minute for updates
 };
 
