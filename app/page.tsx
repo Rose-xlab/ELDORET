@@ -34,9 +34,7 @@ interface TrendingCardProps {
   entity: Entity;
   type: 'nominee' | 'institution';
 }
-
 function TrendingCard({ entity, type }: TrendingCardProps) {
-  // console.log('TrendingCard entity:', entity);
   return (
     <Link href={`/${type}s/${entity.id}`}>
       <Card className="hover:shadow-lg transition">
@@ -68,22 +66,13 @@ function TrendingCard({ entity, type }: TrendingCardProps) {
               </div>
             </div>
           </div>
-          
-          {entity.recentRatings && entity.recentRatings.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {entity.recentRatings.slice(0, 2).map((rating, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-sm">
-                  <span>{rating.category.icon}</span>
-                  <span className="text-gray-600">{rating.comment}</span>
-                </div>
-              ))}
-            </div>
-          )}
         </CardContent>
       </Card>
     </Link>
   );
 }
+
+   
 
 export default function HomePage() {
   const stats = useStats();
