@@ -1,10 +1,8 @@
-// components/ratings/RatingComponent.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-//import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
@@ -42,7 +40,6 @@ export function RatingComponent({
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [ratings, setRatings] = useState<Record<number, number>>({});
-  const [comments, setComments] = useState<Record<number, string>>({});
   const [overallComment, setOverallComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [rateLimit, setRateLimit] = useState<{
@@ -52,10 +49,7 @@ export function RatingComponent({
 
   useEffect(() => {
     const checkRateLimit = async () => {
-      // if (!isAuthenticated) return;
-
       try {
-        // console.log("Entity ID: ", entityId);
         const response = await fetch(
           `/api/rate-limit?type=${type}&targetId=${entityId}`
         );
@@ -113,8 +107,7 @@ export function RatingComponent({
     try {
       const submissions: RatingSubmission[] = Object.entries(ratings).map(([categoryId, score]) => ({
         categoryId: parseInt(categoryId),
-        score,
-        comment: comments[parseInt(categoryId)] || ''
+        score
       }));
 
       if (overallComment) {
@@ -130,17 +123,14 @@ export function RatingComponent({
       if (!response.ok) throw new Error('Failed to submit ratings');
 
       setRatings({});
-      setComments({});
       setOverallComment('');
 
       toast({
         title: "Success",
         description: "Ratings submitted successfully"
       });
-      // Close the modal if onClose is provided
-      if (onClose) onClose();
 
-      // Refresh the page to update the ratings display
+      if (onClose) onClose();
       window.location.reload();
     } catch (error) {
       toast({
@@ -178,7 +168,6 @@ export function RatingComponent({
   };
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // Only close if the overlay itself (not its children) was clicked
     if (event.target === event.currentTarget) {
       onClose?.();
     }
@@ -213,58 +202,49 @@ export function RatingComponent({
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       onClick={handleOverlayClick}
     >
-      <Card className="w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
+      <Card className="w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto bg-gray-50">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Submit Rating</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Submit Rating</h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 rounded-full"
+            className="h-8 w-8 rounded-full hover:bg-gray-200"
           >
             ✕
           </Button>
         </div>
 
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
-          <div className="space-y-2">
-            <label className="font-medium">Overall Comment (Optional)</label>
+          <div className="space-y-2 bg-white p-4 rounded-lg shadow-sm">
+            <label className="font-medium text-gray-700">Overall Comment (Optional)</label>
             <Textarea
               value={overallComment}
               onChange={(e) => setOverallComment(e.target.value)}
               placeholder="Share your overall experience..."
-              className="min-h-[100px]"
+              className="min-h-[100px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
 
           <div className="space-y-8">
             {categories.map((category) => (
-              <div key={category.id} className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">{category.icon}</span>
+              <div key={category.id} className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-4 bg-blue-50 p-3 rounded-lg">
+                  <span className="text-2xl bg-blue-100 p-2 rounded-full">{category.icon}</span>
                   <div>
-                    <h3 className="font-medium">{category.name}</h3>
-                    <p className="text-sm text-gray-600">{category.description}</p>
+                    <h3 className="font-semibold text-blue-900">{category.name}</h3>
+                    <p className="text-sm text-blue-700">{category.description}</p>
                   </div>
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 bg-gray-50 p-4 rounded-lg">
                   {renderStars(category.id)}
                 </div>
 
-                <Textarea
-                  placeholder={`Additional comments about ${category.name.toLowerCase()}...`}
-                  value={comments[category.id] || ''}
-                  onChange={(e) => setComments(prev => ({
-                    ...prev,
-                    [category.id]: e.target.value
-                  }))}
-                />
-
                 {category.examples.length > 0 && (
-                  <div className="mt-4">
-                    <p className="text-sm font-medium">Examples:</p>
-                    <ul className="list-disc list-inside text-sm text-gray-600">
+                  <div className="mt-4 bg-green-50 p-4 rounded-lg">
+                    <p className="text-sm font-medium text-green-800 mb-2">Examples:</p>
+                    <ul className="list-disc list-inside text-sm text-green-700 space-y-1">
                       {category.examples.map((example, index) => (
                         <li key={index}>{example}</li>
                       ))}
@@ -275,12 +255,13 @@ export function RatingComponent({
             ))}
           </div>
 
-          <div className="flex justify-end gap-4">
+          <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
             {onClose && (
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700"
               >
                 Cancel
               </Button>
@@ -288,6 +269,7 @@ export function RatingComponent({
             <Button
               type="submit"
               disabled={loading || Object.keys(ratings).length === 0}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               {loading ? 'Submitting...' : 'Submit Ratings'}
             </Button>
