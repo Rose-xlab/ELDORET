@@ -163,11 +163,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [turnstileVerified, setTurnstileVerified] = useState(false);
 
-  const handleTurnstileVerified = useCallback(() => {
-    setTurnstileVerified(true);
-  }, []);
 
   return (
     <html lang="en">
@@ -179,16 +175,12 @@ export default function RootLayout({
                 <div className="min-h-screen flex flex-col bg-background text-foreground">
                   <NavBar />
                   <main className="flex-grow">
-                    {!turnstileVerified && (
-                      <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
-                        <div
-                          className="cf-turnstile"
-                          data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
-                          data-theme="auto"
-                          data-callback={handleTurnstileVerified}
-                        />
-                      </div>
-                    )}
+                    <div
+                      className="cf-turnstile"
+                      data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
+                      data-theme="auto"
+                      data-appearance="invisible"
+                    />
                     {children}
                   </main>
 
