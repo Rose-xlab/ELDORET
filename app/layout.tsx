@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { AuthButton } from "@/components/auth-button";
@@ -163,6 +163,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [turnstileVerified, setTurnstileVerified] = useState(false);
+
+  const handleTurnstileVerified = useCallback(() => {
+    setTurnstileVerified(true);
+  }, []);
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -173,13 +179,16 @@ export default function RootLayout({
                 <div className="min-h-screen flex flex-col bg-background text-foreground">
                   <NavBar />
                   <main className="flex-grow">
-                    <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
-                      <div
-                        className="cf-turnstile"
-                        data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
-                        data-theme="auto"
-                      />
-                    </div>
+                    {!turnstileVerified && (
+                      <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
+                        <div
+                          className="cf-turnstile"
+                          data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
+                          data-theme="auto"
+                          data-callback={handleTurnstileVerified}
+                        />
+                      </div>
+                    )}
                     {children}
                   </main>
 
