@@ -66,12 +66,13 @@ export function SimilarEntitiesSection({ type, currentId }: SimilarEntitiesSecti
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
                 <div className="relative w-16 h-16">
-                  <Image
-                    src={entity.image || "/placeholder.png"}
-                    alt={entity.name}
-                    fill
-                    className="object-cover rounded-full"
-                  />
+                <Image
+  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(entity.name)}&size=128`}
+  alt={`${entity.name} placeholder`}
+  fill
+  className="rounded-lg object-cover"
+  priority
+/>
                 </div>
                 <div>
                   <h3 className="font-medium">{entity.name}</h3>

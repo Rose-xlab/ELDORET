@@ -77,12 +77,12 @@ export function SearchComponent() {
                             >
                               <div className="flex items-center gap-3">
                                 <div className="relative w-10 h-10">
-                                  <Image
-                                    src={result.image || "/placeholder.png"}
-                                    alt={result.name}
-                                    fill
-                                    className="rounded-full object-cover"
-                                  />
+                                <Image
+  src={result.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(result.name)}&size=128&background=f3f4f6&color=4b5563`}
+  alt={result.name}
+  fill
+  className="rounded-full object-cover"
+/>
                                 </div>
                                 <div>
                                   <div className="font-medium">{result.name}</div>

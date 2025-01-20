@@ -33,13 +33,13 @@ export function NomineeCard({ nominee }: NomineeCardProps) {
       <Card className="p-4 hover:shadow-lg transition-shadow">
         <div className="flex items-start space-x-4">
           <Avatar className="w-16 h-16">
-            <Image
-              src={nominee.image || "/placeholder.png"}
-              alt={nominee.name}
-              width={64}
-              height={64}
-              className="object-cover"
-            />
+          <Image
+  src={nominee.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.name)}&size=64&background=f3f4f6&color=4b5563`}
+  alt={nominee.name}
+  width={64}
+  height={64}
+  className="object-cover"
+/>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-start justify-between">

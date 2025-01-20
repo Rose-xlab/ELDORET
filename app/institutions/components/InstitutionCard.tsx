@@ -38,7 +38,7 @@ export function InstitutionCard({ institution }: InstitutionCardProps) {
         <div className="flex items-start space-x-4">
           <Avatar className="w-16 h-16">
             <Image
-              src={institution.image || "/placeholder.png"}
+              src={institution.image || "/images/placeholders/institution.png"}
               alt={institution.name}
               width={64}
               height={64}

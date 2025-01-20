@@ -88,13 +88,13 @@ export default function LeaderboardPage() {
       </div>
 
       <div className="relative w-12 h-12 flex-shrink-0">
-        <Image
-          src={leader.image || "/placeholder.png"}
-          alt={leader.name}
-          fill
-          className="rounded-full object-cover"
-        />
-      </div>
+      <Image
+  src={leader.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(leader.name)}&size=128&background=f3f4f6&color=4b5563`}
+  alt={leader.name}
+  fill
+  className="rounded-full object-cover"
+/>
+</div>
 
       <div className="flex-1">
         <h3 className="font-medium">{leader.name}</h3>

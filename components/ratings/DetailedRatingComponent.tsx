@@ -147,12 +147,12 @@ const SimilarProfiles: React.FC<SimilarProfilesProps> = ({ profiles, type }) => 
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
                 <div className="relative w-16 h-16">
-                  <Image
-                    src={profile.image || "/placeholder.png"}
-                    alt={profile.name}
-                    fill
-                    className="object-cover rounded-full"
-                  />
+                <Image
+  src={profile.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&size=128&background=f3f4f6&color=4b5563`}
+  alt={profile.name}
+  fill
+  className="object-cover rounded-full"
+/>
                 </div>
                 <div>
                   <h3 className="font-medium">{profile.name}</h3>

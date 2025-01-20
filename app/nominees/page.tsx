@@ -83,10 +83,11 @@ export default function NomineesPage() {
         <div className="flex items-start space-x-4">
           <Avatar className="w-16 h-16">
             <Image
-              src={nominee.image || "/npp.png"}
+              src={nominee.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.name)}&size=64&background=f3f4f6&color=4b5563`}
               alt={nominee.name}
               width={64}
               height={64}
+              className="object-cover"
             />
           </Avatar>
           

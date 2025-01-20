@@ -351,12 +351,12 @@ const InstitutionsDashboard: React.FC = () => {
                   <td className="px-4 py-2">{institution.id}</td>
                   <td className="px-4 py-2">
                     <div className="relative w-16 h-16">
-                      <Image
-                        src={institution.image || "/placeholder.png"}
-                        alt={institution.name}
-                        fill
-                        className="object-cover rounded-full"
-                      />
+                    <Image
+  src={institution.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(institution.name)}&size=128&background=f3f4f6&color=4b5563`}
+  alt={institution.name}
+  fill
+  className="object-cover rounded-full"
+/>
                     </div>
                   </td>
                   <td className="px-4 py-2">{institution.name}</td>

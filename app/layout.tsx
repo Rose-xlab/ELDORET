@@ -3,10 +3,7 @@
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
-import { useState, useCallback } from "react";
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/react';
+import { useState } from "react";
 import { AuthButton } from "@/components/auth-button";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
@@ -30,7 +27,7 @@ function NavBar() {
   return (
     <>
       <KenyaThemeHeader />
-      <nav className="bg-primary text-primary-foreground sticky top-0 z-40">
+      <nav className="bg-primary text-primary-foreground sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Link href="/" className="flex items-center space-x-2">
@@ -163,8 +160,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -174,15 +169,7 @@ export default function RootLayout({
               <StatsProvider>
                 <div className="min-h-screen flex flex-col bg-background text-foreground">
                   <NavBar />
-                  <main className="flex-grow">
-                    <div
-                      className="cf-turnstile"
-                      data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
-                      data-theme="auto"
-                      data-appearance="invisible"
-                    />
-                    {children}
-                  </main>
+                  <main className="flex-grow">{children}</main>
 
                   <footer className="bg-primary text-primary-foreground">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -241,9 +228,7 @@ export default function RootLayout({
                               </Link>
                             </li>
                             <li>
-                              <Link href="/report" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                                Report Issue
-                              </Link>
+                              
                             </li>
                           </ul>
                         </div>
@@ -263,9 +248,7 @@ export default function RootLayout({
                               </Link>
                             </li>
                             <li>
-                              <Link href="/disclaimer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                                Disclaimer
-                              </Link>
+                      
                             </li>
                           </ul>
                         </div>
@@ -279,17 +262,10 @@ export default function RootLayout({
                     </div>
                   </footer>
                 </div>
-                <SpeedInsights />
-                <Analytics />
               </StatsProvider>
             </SearchProvider>
           </AuthProvider>
         </ThemeProvider>
-        <Script 
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          async 
-          defer
-        />
       </body>
     </html>
   );

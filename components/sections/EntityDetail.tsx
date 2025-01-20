@@ -144,9 +144,13 @@ export function EntityDetail({
                   priority
                 />
               ) : (
-                <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-400 text-xl">{entity.name[0]}</span>
-                </div>
+                <Image
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(entity.name)}&size=${type === 'nominee' ? '128' : '256'}&background=f3f4f6&color=4b5563`}
+                  alt={`${entity.name} placeholder`}
+                  fill
+                  className="rounded-lg object-cover"
+                  priority
+                />
               )}
             </div>
 
@@ -224,7 +228,6 @@ export function EntityDetail({
           </div>
         </div>
       </Card>
-
 
       <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
         <TabsList className="w-full overflow-x-auto">
