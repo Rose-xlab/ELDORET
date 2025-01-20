@@ -176,7 +176,7 @@ export default function RootLayout({
                     <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
                       <div
                         className="cf-turnstile"
-                        data-sitekey="0x4AAAAAAA5vc55Su3q554m8"
+                        data-sitekey="0x4AAAAAAA5viAdFGy5HSP8u"
                         data-theme="auto"
                       />
                     </div>
