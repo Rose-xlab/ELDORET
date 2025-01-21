@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Mail, MapPin, Phone, Clock, Shield, FileUp } from 'lucide-react';
+import { Mail, Shield, FileUp } from 'lucide-react';
 
 // Replace this URL with your actual Google Form URL
 const EVIDENCE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdYo5iyEc7jJgFGQ5d3hM66uVd_s_59JlPReY3szX86TEHXuA/viewform?usp=sharing';
@@ -51,37 +51,8 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-100 rounded-lg">
-                  <Phone className="w-6 h-6 text-slate-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg">Whatsapp</h3>
-                  <a href="tel:+254700000000" className="text-blue-600 hover:underline">
-                    +254 700 000 000
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-100 rounded-lg">
-                  <MapPin className="w-6 h-6 text-slate-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg">Office</h3>
-                  <p className="text-gray-600">Nairobi, Kenya</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-100 rounded-lg">
-                  <Clock className="w-6 h-6 text-slate-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg">Hours</h3>
-                  <p className="text-gray-600">24/7 for urgent reports</p>
-                </div>
-              </div>
+              
+        
             </CardContent>
           </Card>
 

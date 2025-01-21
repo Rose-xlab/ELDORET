@@ -1,6 +1,5 @@
 // prisma/seed.ts
 import { PrismaClient, UserRole } from "@prisma/client"; 
-import { faker } from "@faker-js/faker";
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -17,7 +16,7 @@ async function main() {
 
     // Seed Users with hashed passwords
     console.log("Seeding users...");
-    const users = await Promise.all(
+    const _users = await Promise.all(
         [
             // Admin user
             {
@@ -67,118 +66,6 @@ async function main() {
             });
         })
     );
-
-    // Seed Districts
-    console.log("Seeding districts...");
-    const districts = await Promise.all(
-        [
-            { name: 'Kampala', region: 'Central' },
-            { name: 'Gulu', region: 'Northern' },
-            { name: 'Mbarara', region: 'Western' },
-            { name: 'Mbale', region: 'Eastern' },
-            { name: 'Jinja', region: 'Eastern' },
-        ].map((districtData) =>
-            prisma.district.create({
-                data: districtData,
-            })
-        )
-    );
-
-    // Seed Institutions
-    console.log("Seeding institutions...");
-    const institutions = await Promise.all(
-        [
-            { name: 'Makerere University', status: true },
-            { name: 'Mulago Hospital', status: true },
-            { name: 'Bank of Uganda', status: true },
-            { name: 'Uganda Revenue Authority', status: true },
-            { name: 'KCCA', status: true },
-        ].map((institutionData) =>
-            prisma.institution.create({
-                data: institutionData,
-            })
-        )
-    );
-
-    // Seed Positions
-    console.log("Seeding positions...");
-    const positions = await Promise.all(
-        ['Cabinet Secretary', 'Minister', 'Mayor', 'County Governor', 'Managing Director']
-            .map((name) =>
-                prisma.position.create({
-                    data: { name },
-                })
-            )
-    );
-
-    // Seed Nominees
-    console.log("Seeding nominees...");
-    const nominees = await Promise.all(
-        [
-            {
-                name: 'John Doe',
-                position: { connect: { id: positions[0].id } },
-                institution: { connect: { id: institutions[0].id } },
-                district: { connect: { id: districts[0].id } },
-                status: true
-            },
-            {
-                name: 'Jane Smith',
-                position: { connect: { id: positions[1].id } },
-                institution: { connect: { id: institutions[1].id } },
-                district: { connect: { id: districts[1].id } },
-                status: false
-            },
-            {
-                name: 'Paul Johnson',
-                position: { connect: { id: positions[2].id } },
-                institution: { connect: { id: institutions[2].id } },
-                district: { connect: { id: districts[2].id } },
-                status: true
-            },
-            {
-                name: 'Emily Davis',
-                position: { connect: { id: positions[3].id } },
-                institution: { connect: { id: institutions[3].id } },
-                district: { connect: { id: districts[3].id } },
-                status: false
-            },
-            {
-                name: 'Michael Brown',
-                position: { connect: { id: positions[4].id } },
-                institution: { connect: { id: institutions[4].id } },
-                district: { connect: { id: districts[4].id } },
-                status: true
-            },
-        ].map((nomineeData) =>
-            prisma.nominee.create({
-                data: nomineeData,
-            })
-        )
-    );
-
-    // Seed Departments
-    console.log("Seeding departments...");
-    const departments = await Promise.all([
-        'Finance', 'Health', 'Legal', 'Licensing', 'Procurement', 'Revenue',
-        'Public Services', 'Human Resources', 'Treasury', 'Urban Planning',
-        'Social Services', 'Development Projects'
-    ].map((name) =>
-        prisma.department.create({
-            data: { name }
-        })
-    ));
-
-    // Seed Impact Areas
-    console.log("Seeding impact areas...");
-    const impactAreas = await Promise.all([
-        'Financial', 'Healthcare', 'Legal System', 'Infrastructure',
-        'Education', 'Public Safety', 'Environment', 'Economic Development'
-    ].map((name) =>
-        prisma.impactArea.create({
-            data: { name }
-        })
-    ));
 
     // Seed Institution Rating Categories
     console.log("Seeding institution rating categories...");
@@ -315,26 +202,17 @@ async function main() {
                 "Action effectiveness"
             ]
         }
-    ].map(async (category) => {
-        const selectedImpactAreas = faker.helpers.arrayElements(impactAreas, 2);
-        const selectedDepartments = faker.helpers.arrayElements(departments, 2);
-
-        return prisma.institutionRatingCategory.create({
+    ].map(category => 
+        prisma.institutionRatingCategory.create({
             data: {
-                ...category,
-                impactAreas: {
-                    connect: selectedImpactAreas.map(area => ({ id: area.id }))
-                },
-                departments: {
-                    connect: selectedDepartments.map(dept => ({ id: dept.id }))
-                }
+                ...category
             }
-        });
-    }));
+        })
+    ));
 
     // Seed Rating Categories for Nominees
     console.log("Seeding rating categories...");
-    const ratingCategories = await Promise.all([
+    const _ratingCategories = await Promise.all([
         {
             keyword: 'bribery',
             name: 'Bribery',
@@ -455,73 +333,13 @@ async function main() {
                 'Creating positions for friends'
             ]
         }
-    ].map(async (category) => {
-        const selectedImpactAreas = faker.helpers.arrayElements(impactAreas, 2);
-        const selectedDepartments = faker.helpers.arrayElements(departments, 2);
-
-        return prisma.ratingCategory.create({
+    ].map(category => 
+        prisma.ratingCategory.create({
             data: {
-                ...category,
-                impactAreas: {
-                    connect: selectedImpactAreas.map(area => ({ id: area.id }))
-                },
-                departments: {
-                    connect: selectedDepartments.map(dept => ({ id: dept.id }))
-                }
+                ...category
             }
-        });
-    }));
-
-    // Seed ratings and comments for each nominee
-    console.log("Seeding ratings and comments...");
-    for (const nominee of nominees) {
-        for (let i = 0; i < 3; i++) {
-            const comment = faker.lorem.sentence();
-
-            try {
-                // Create NomineeRating
-                await prisma.nomineeRating.create({
-                    data: {
-                        userId: faker.helpers.arrayElement(users).id,
-                        nomineeId: nominee.id,
-                        ratingCategoryId: (await ratingCategories[0]).id,
-                        score: faker.number.int({ min: 1, max: 5 }),
-                        comment
-                    }
-                });
-
-                // Create Comment
-                await prisma.comment.create({
-                    data: {
-                        content: comment,
-                        userId: faker.helpers.arrayElement(users).id,
-                        nomineeId: nominee.id,
-                    }
-                });
-            } catch (error) {
-                console.error(`Error creating rating/comment for nominee ${nominee.id}:`, error);
-            }
-        }
-    }
-
-    // Seed scandals for first two nominees
-    console.log("Seeding scandals...");
-    for (const nominee of nominees.slice(0, 2)) {
-        try {
-            await prisma.scandal.create({
-                data: {
-                    title: faker.lorem.sentence(),
-                    description: faker.lorem.paragraphs(2),
-                    sourceUrl: faker.internet.url(),
-                    verified: true,
-                    nomineeId: nominee.id,
-                    createdBy: faker.helpers.arrayElement(users).id,
-                }
-            });
-        } catch (error) {
-            console.error(`Error creating scandal for nominee ${nominee.id}:`, error);
-        }
-    }
+        })
+    ));
 
     console.log('Database seeding completed successfully!');
 }

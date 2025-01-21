@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Mail, Phone, Shield, AlertTriangle, FileUp } from 'lucide-react';
+import { Mail, Shield, AlertTriangle, FileUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Replace with your actual form URL
@@ -63,19 +63,8 @@ export default function SubmitPage() {
                 </div>
               </div>
 
-              {/* Phone */}
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-100 rounded-lg">
-                  <Phone className="w-6 h-6 text-slate-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg">Hotline</h3>
-                  <p className="text-gray-600 mb-2">Available 24/7 for urgent reports</p>
-                  <a href="tel:+254700000000" className="text-blue-600 hover:underline">
-                    +254 700 000 000
-                  </a>
-                </div>
-              </div>
+              
+              
             </CardContent>
           </Card>
 
