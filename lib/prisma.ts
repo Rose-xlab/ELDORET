@@ -27,9 +27,9 @@ export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 // Add type-safe event handling
-prisma.$on('query' as never, (e: Prisma.QueryEvent) => {
-  console.log('Query:', e);
-});
+// prisma.$on('query' as never, (e: Prisma.QueryEvent) => {
+//   console.log('Query:', e);
+// });
 
 // Handle connection errors
 process.on('unhandledRejection', async (e) => {
