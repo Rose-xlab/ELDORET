@@ -89,7 +89,7 @@ export default function HomePage() {
               Exposing Corruption in Kenya
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-gray-300">
-              Join thousands of citizens in rating and exposing corruption through transparent, evidence-based reporting.
+              Join thousands of Kenyans in rating and exposing corruption through transparent, evidence-based reporting.
             </p>
 
             {/* Search Box */}
