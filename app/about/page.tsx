@@ -49,7 +49,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Evidence Based</h3>
                 <p className="text-gray-600">
-                  Every report on Corrupt Free Kenya platform is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
+                  Every report on Corrupt Free Kenya is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
                 </p>
               </CardContent>
             </Card>
@@ -61,7 +61,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Real Impact</h3>
                 <p className="text-gray-600">
-                  Our platform has helped identify and expose numerous cases of corruption, leading to real investigations and changes in both public and private institutions.
+                  Corrupt Free Kenya has helped identify and expose numerous cases of corruption, leading to real investigations and changes in both public and private institutions.
                 </p>
               </CardContent>
             </Card>
