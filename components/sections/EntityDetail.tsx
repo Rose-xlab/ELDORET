@@ -230,16 +230,18 @@ export function EntityDetail({
       </Card>
 
       <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
-        <TabsList className="w-full overflow-x-auto">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="scandals">
-            Scandals {entity.scandals?.length > 0 && `(${entity.scandals.length})`}
-          </TabsTrigger>
-          <TabsTrigger value="evidence">Evidence</TabsTrigger>
-          <TabsTrigger value="similar">
-            Similar {type === "nominee" ? "Officials" : "Institutions"}
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex">
+          <TabsList className="flex justify-start h-10 items-center w-full space-x-2 rounded-none bg-muted px-4 text-muted-foreground overflow-x-auto">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="scandals">
+              Scandals {entity.scandals?.length > 0 && `(${entity.scandals.length})`}
+            </TabsTrigger>
+            <TabsTrigger value="evidence">Evidence</TabsTrigger>
+            <TabsTrigger value="similar">
+              Similar {type === "nominee" ? "Officials" : "Institutions"}
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
