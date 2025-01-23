@@ -37,7 +37,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Community Driven</h3>
                 <p className="text-gray-600">
-                  We believe in the power of collective action. Our platform brings together thousands of citizens working to create a corruption-free Kenya through transparent reporting and accountability.
+                  We believe in the power of collective action. Corrupt Free Kenya brings together thousands of citizens working to create a corruption-free Kenya through transparent reporting and accountability.
                 </p>
               </CardContent>
             </Card>
@@ -49,7 +49,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Evidence Based</h3>
                 <p className="text-gray-600">
-                  Every report on our platform is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
+                  Every report on our Corrupt Free Kenya platform is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
                 </p>
               </CardContent>
             </Card>
@@ -70,7 +70,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-slate-900 mb-6">How It Works</h2>
           <div className="space-y-6 text-gray-600 mb-12">
             <p>
-              Our platform enables citizens to submit detailed reports about corruption, complete with evidence and documentation. These reports are then verified and made public, creating a transparent record of corrupt practices and officials.
+              Corrupt Free Kenya enables citizens to submit detailed reports about corruption, complete with evidence and documentation. These reports are then verified and made public, creating a transparent record of corrupt practices and officials.
             </p>
             <p>
               Users can:
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
           <h2 className="text-3xl font-bold text-slate-900 mb-6">Join the Fight Against Corruption</h2>
           <p className="text-gray-600 mb-8">
-            We invite all Kenyan citizens to join our platform and contribute to the fight against corruption. Together, we can build a more transparent and accountable society for future generations.
+            We invite all Kenyan citizens to join Corrupt Free Kenya platform and contribute to the fight against corruption. Together, we can build a more transparent and accountable society for future generations.
           </p>
 
           <div className="flex justify-center mt-12">
