@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div className="prose prose-lg max-w-none">
           <h2 className="text-3xl font-bold text-slate-900 mb-6">Who We Are</h2>
           <p className="text-gray-600 mb-8">
-            We are a community-driven platform dedicated to exposing and combating corruption in Kenya. Our mission is to empower citizens with the tools and platform they need to report, track, and expose corrupt practices at all levels of government and institutions.
+            Corrupt Free Kenya is a community-driven platform dedicated to exposing and combating corruption in Kenya. Our mission is to empower citizens with the tools and platform they need to report, track, and expose corrupt practices at all levels of government and institutions.
           </p>
 
           <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Approach</h2>
@@ -49,7 +49,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Evidence Based</h3>
                 <p className="text-gray-600">
-                  Every report on our Corrupt Free Kenya platform is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
+                  Every report on Corrupt Free Kenya platform is backed by verifiable evidence. We maintain high standards of documentation to ensure the integrity and credibility of all corruption reports.
                 </p>
               </CardContent>
             </Card>
