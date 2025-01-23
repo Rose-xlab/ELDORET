@@ -94,7 +94,6 @@ interface UploadSummary {
   };
 }
 
-// Components
 const InfiniteScrollSelect: React.FC<InfiniteScrollSelectProps> = ({
   value,
   onChange,
@@ -169,6 +168,7 @@ const NomineesDashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [uploadSummary, setUploadSummary] = useState<UploadSummary | null>(null);
+  const [searchInput, setSearchInput] = useState("");
   
   // Entity States
   const [institutions, setInstitutions] = useState<EntityState<Institution>>({
@@ -194,7 +194,6 @@ const NomineesDashboard: React.FC = () => {
     hasMore: true,
     searchText: ''
   });
-
   // Form States
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingNominee, setEditingNominee] = useState<EditNomineeFormData | null>(null);
@@ -226,7 +225,6 @@ const NomineesDashboard: React.FC = () => {
         action: action
       };
 
-      // Add status for activate/deactivate actions
       if (action === 'activate' || action === 'deactivate') {
         payload.status = action === 'activate';
       }
@@ -242,8 +240,8 @@ const NomineesDashboard: React.FC = () => {
       });
 
       if (response.status >= 200 && response.status < 300) {
-        setSelectedNominees([]); // Clear selections after successful action
-        await fetchNominees(currentPage); // Refresh the nominees list
+        setSelectedNominees([]);
+        await fetchNominees(currentPage, searchInput);
         
         toast({
           title: "Success",
@@ -285,7 +283,7 @@ const NomineesDashboard: React.FC = () => {
       await axios.patch(`/api/nominees/${id}`, {
         status: !currentStatus
       });
-      fetchNominees(currentPage);
+      fetchNominees(currentPage, searchInput);
       toast({
         title: "Success",
         description: `Nominee ${!currentStatus ? 'activated' : 'deactivated'} successfully`
@@ -342,9 +340,9 @@ const NomineesDashboard: React.FC = () => {
   [loadEntities]);
 
   // Fetch nominees
-  const fetchNominees = useCallback(async (page: number) => {
+  const fetchNominees = useCallback(async (page: number, search: string = '') => {
     try {
-      const response = await axios.get(`/api/nominees?page=${page}`);
+      const response = await axios.get(`/api/nominees?page=${page}&search=${search}`);
       setNominees(response.data.data);
       setTotalPages(response.data.pages);
     } catch (error) {
@@ -408,7 +406,7 @@ const NomineesDashboard: React.FC = () => {
       try {
         const response = await axios.post('/api/nominees/bulk-upload', formData);
         setUploadSummary(response.data.summary);
-        fetchNominees(currentPage);
+        fetchNominees(currentPage, searchInput);
         
         toast({
           title: "Success",
@@ -427,7 +425,7 @@ const NomineesDashboard: React.FC = () => {
         fileInputRef.current.value = '';
       }
     }
-  }, [currentPage, fetchNominees, toast]);
+  }, [currentPage, fetchNominees, searchInput, toast]);
 
   const handleDownloadTemplate = useCallback(async () => {
     try {
@@ -482,7 +480,7 @@ const NomineesDashboard: React.FC = () => {
       }
 
       await axios.post("/api/nominees", newNominee);
-      fetchNominees(currentPage);
+      fetchNominees(currentPage, searchInput);
       setNewNominee({
         name: "",
         positionId: 0,
@@ -503,7 +501,7 @@ const NomineesDashboard: React.FC = () => {
         description: "Failed to create nominee"
       });
     }
-  }, [newNominee, currentPage, fetchNominees, toast]);
+  }, [newNominee, currentPage, fetchNominees, searchInput, toast]);
 
   const handleEditNominee = useCallback((nominee: Nominee) => {
     setEditingNominee({
@@ -524,7 +522,7 @@ const NomineesDashboard: React.FC = () => {
 
     try {
       await axios.patch(`/api/nominees/${editingNominee.id}`, editingNominee);
-      fetchNominees(currentPage);
+      fetchNominees(currentPage, searchInput);
       setEditDialogOpen(false);
       setEditingNominee(null);
       toast({
@@ -539,14 +537,14 @@ const NomineesDashboard: React.FC = () => {
         description: "Failed to update nominee"
       });
     }
-  }, [editingNominee, currentPage, fetchNominees, toast]);
+  }, [editingNominee, currentPage, fetchNominees, searchInput, toast]);
 
   const handleDeleteNominee = useCallback(async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this nominee?")) return;
 
     try {
       await axios.delete(`/api/nominees/${id}`);
-      fetchNominees(currentPage);
+      fetchNominees(currentPage, searchInput);
       toast({
         title: "Success",
         description: "Nominee deleted successfully"
@@ -559,7 +557,7 @@ const NomineesDashboard: React.FC = () => {
         description: "Failed to delete nominee"
       });
     }
-  }, [currentPage, fetchNominees, toast]);
+  }, [currentPage, fetchNominees, searchInput, toast]);
 
   // Pagination helper
   const getPageNumbers = useCallback(() => {
@@ -584,12 +582,27 @@ const NomineesDashboard: React.FC = () => {
   }, [loadInstitutions, loadPositions, loadDistricts]);
 
   useEffect(() => {
-    fetchNominees(currentPage);
-  }, [currentPage, fetchNominees]);
+    fetchNominees(currentPage, searchInput);
+  }, [currentPage, searchInput, fetchNominees]);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl text-black font-bold mb-4">Nominees Dashboard</h1>
+
+      {/* Search Input */}
+      <div className="mb-4">
+        <Input
+          type="text"
+          placeholder="Search nominees by name, position, or institution..."
+          value={searchInput}
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+            setCurrentPage(1);
+            fetchNominees(1, e.target.value);
+          }}
+          className="w-full md:w-96 text-black"
+        />
+      </div>
 
       {/* Bulk Actions */}
       <div className="flex justify-between mb-4">
@@ -628,7 +641,7 @@ const NomineesDashboard: React.FC = () => {
             variant="outline"
             className="flex items-center gap-2"
           >
-            <Download className="w-4 h-4" />
+            <Download className=">w-4 h-4" />
             Download Template
           </Button>
           <input
