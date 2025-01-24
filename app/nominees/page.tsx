@@ -84,7 +84,8 @@ export default function NomineesPage() {
           <Avatar className="w-16 h-16">
             <Image
               src={
-                nominee.image }
+                nominee.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.name)}&size=64&background=f3f4f6&color=4b5563`
+              }
               alt={nominee.name}
               width={64}
               height={64}
