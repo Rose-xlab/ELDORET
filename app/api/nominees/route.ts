@@ -136,14 +136,13 @@ export async function GET(req: NextRequest) {
         .sort((a, b) => b.averageRating - a.averageRating);
 
       const nomineesWithRank: NomineeWithRankAndAverage[] = nominees.map(nominee => {
-        // Your existing nominee transformation code exactly as is
         const rank = rankedNominees.findIndex(n => n.id === nominee.id) + 1;
         const averageRating = calculateAverageRating(nominee.rating);
 
         return {
           id: nominee.id,
           name: nominee.name,
-          image: nominee.image ?? undefined,
+          image: nominee.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.name)}&size=64&background=f3f4f6&color=4b5563`,
           evidence: nominee.evidence ?? undefined,
           positionId: nominee.positionId,
           institutionId: nominee.institutionId,
@@ -161,7 +160,7 @@ export async function GET(req: NextRequest) {
           institution: {
             id: nominee.institution.id,
             name: nominee.institution.name,
-            image: nominee.institution.image ?? undefined,
+            image: nominee.institution.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.institution.name)}&size=64&background=f3f4f6&color=4b5563`,
             status: nominee.institution.status,
             rating: nominee.institution.rating.map(r => ({
               id: r.id,
@@ -195,7 +194,7 @@ export async function GET(req: NextRequest) {
             user: r.user ? {
               id: r.user.id,
               name: r.user.name,
-              image: r.user.image ?? undefined
+              image: r.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(r.user.name)}&size=64&background=f3f4f6&color=4b5563`
             } : undefined,
             ratingCategory: {
               id: r.ratingCategory.id,
@@ -216,7 +215,7 @@ export async function GET(req: NextRequest) {
             user: {
               id: comment.user.id,
               name: comment.user.name,
-              image: comment.user.image ?? undefined
+              image: comment.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.user.name)}&size=64&background=f3f4f6&color=4b5563`
             },
             replies: comment.replies.map(reply => ({
               id: reply.id,
@@ -225,7 +224,7 @@ export async function GET(req: NextRequest) {
               user: {
                 id: reply.user.id,
                 name: reply.user.name,
-                image: reply.user.image ?? undefined
+                image: reply.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(reply.user.name)}&size=64&background=f3f4f6&color=4b5563`
               },
               reactions: reply.reactions.map(reaction => ({
                 id: reaction.id,

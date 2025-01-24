@@ -1,4 +1,3 @@
-// app/api/trending/[type]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -8,28 +7,20 @@ export async function GET(
 ) {
   try {
     const type = params.type;
-    const limit = 5; // Number of trending entities to return
+    const limit = 5;
 
     if (type === 'nominees') {
       const nominees = await prisma.nominee.findMany({
-        where: { status: true },
+        // where: { status: true },
         include: {
           rating: {
             include: {
               ratingCategory: true
-            },
-            orderBy: { createdAt: 'desc' },
-            take: 2 // Only get 2 most recent ratings
+            }
           },
           position: true,
           institution: true
-        },
-        orderBy: {
-          rating: {
-            _count: 'desc'
-          }
-        },
-        take: limit
+        }
       });
 
       const processedNominees = nominees.map(nominee => ({
@@ -38,48 +29,54 @@ export async function GET(
         image: nominee.image,
         position: nominee.position,
         institution: nominee.institution,
-        averageRating: nominee.rating.reduce((acc, r) => acc + r.score, 0) / nominee.rating.length,
+        averageRating: nominee.rating.length > 0
+          ? nominee.rating.reduce((acc, r) => acc + r.score, 0) / nominee.rating.length
+          : 0,
         totalRatings: nominee.rating.length,
-        recentRatings: nominee.rating.map(r => ({
-          score: r.score,
-          comment: r.comment,
-          category: r.ratingCategory
-        }))
-      }));
+        recentRatings: nominee.rating
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .slice(0, 2)
+          .map(r => ({
+            score: r.score,
+            comment: r.comment,
+            category: r.ratingCategory
+          }))
+      }))
+        .sort((a, b) => b.averageRating - a.averageRating)
+        .slice(0, limit);
 
       return NextResponse.json(processedNominees);
     } else if (type === 'institutions') {
       const institutions = await prisma.institution.findMany({
-        where: { status: true },
+        // where: { status: true },
         include: {
           rating: {
             include: {
               ratingCategory: true
-            },
-            orderBy: { createdAt: 'desc' },
-            take: 2
+            }
           }
-        },
-        orderBy: {
-          rating: {
-            _count: 'desc'
-          }
-        },
-        take: limit
+        }
       });
 
       const processedInstitutions = institutions.map(institution => ({
         id: institution.id,
         name: institution.name,
         image: institution.image,
-        averageRating: institution.rating.reduce((acc, r) => acc + r.score, 0) / institution.rating.length,
+        averageRating: institution.rating.length > 0
+          ? institution.rating.reduce((acc, r) => acc + r.score, 0) / institution.rating.length
+          : 0,
         totalRatings: institution.rating.length,
-        recentRatings: institution.rating.map(r => ({
-          score: r.score,
-          comment: r.comment,
-          category: r.ratingCategory
-        }))
-      }));
+        recentRatings: institution.rating
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .slice(0, 2)
+          .map(r => ({
+            score: r.score,
+            comment: r.comment,
+            category: r.ratingCategory
+          }))
+      }))
+        .sort((a, b) => b.averageRating - a.averageRating)
+        .slice(0, limit);
 
       return NextResponse.json(processedInstitutions);
     }

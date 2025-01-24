@@ -20,7 +20,7 @@ export default function NomineesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortBy, setSortBy] = useState<'recent' | 'rating'>('recent');
+  const [sortBy, setSortBy] = useState<"recent" | "rating">("recent");
 
   const fetchNominees = useCallback(async () => {
     try {
@@ -83,25 +83,32 @@ export default function NomineesPage() {
         <div className="flex items-start space-x-4">
           <Avatar className="w-16 h-16">
             <Image
-              src={nominee.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(nominee.name)}&size=64&background=f3f4f6&color=4b5563`}
+              src={
+                nominee.image }
               alt={nominee.name}
               width={64}
               height={64}
               className="object-cover"
             />
           </Avatar>
-          
+
           <div className="flex-1">
             <div className="flex justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   {nominee.name}
                 </h2>
-                <p className="text-gray-600">{nominee.position?.name || 'Position Not Specified'}</p>
-                <p className="text-gray-500">{nominee.institution?.name || 'Institution Not Specified'}</p>
-                <p className="text-sm text-gray-400">{nominee.district?.name || 'District Not Specified'}</p>
+                <p className="text-gray-600">
+                  {nominee.position?.name || "Position Not Specified"}
+                </p>
+                <p className="text-gray-500">
+                  {nominee.institution?.name || "Institution Not Specified"}
+                </p>
+                <p className="text-sm text-gray-400">
+                  {nominee.district?.name || "District Not Specified"}
+                </p>
               </div>
-              
+
               <div className="text-right">
                 <div className="text-2xl font-bold text-blue-600">
                   {calculateAverageRating(nominee.rating)}/5
@@ -136,7 +143,7 @@ export default function NomineesPage() {
     <div className="mt-8 flex justify-center gap-2">
       <Button
         variant="outline"
-        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
         disabled={currentPage === 1}
       >
         Previous
@@ -146,7 +153,7 @@ export default function NomineesPage() {
       </span>
       <Button
         variant="outline"
-        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
         disabled={currentPage === totalPages}
       >
         Next
@@ -158,7 +165,9 @@ export default function NomineesPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Officials Directory</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Officials Directory
+        </h1>
       </div>
 
       {/* Search and Filters */}
@@ -170,17 +179,17 @@ export default function NomineesPage() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-xl"
         />
-        
+
         <div className="flex gap-2">
           <Button
-            variant={sortBy === 'recent' ? 'default' : 'outline'}
-            onClick={() => setSortBy('recent')}
+            variant={sortBy === "recent" ? "default" : "outline"}
+            onClick={() => setSortBy("recent")}
           >
             Most Recent
           </Button>
           <Button
-            variant={sortBy === 'rating' ? 'default' : 'outline'}
-            onClick={() => setSortBy('rating')}
+            variant={sortBy === "rating" ? "default" : "outline"}
+            onClick={() => setSortBy("rating")}
           >
             Highest Rated
           </Button>
@@ -192,7 +201,7 @@ export default function NomineesPage() {
         renderSkeletonLoader()
       ) : (
         <div className="space-y-4">
-          {nominees.map(nominee => renderNomineeCard(nominee))}
+          {nominees.map((nominee) => renderNomineeCard(nominee))}
         </div>
       )}
 

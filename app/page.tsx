@@ -1,10 +1,17 @@
-'use client';
+"use client";
 
-import { SearchComponent } from '@/components/SearchComponent';
-import { useStats } from '@/components/StatsProvider';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, Users, Award, Star, TrendingUp, ChevronRight } from 'lucide-react';
+import { SearchComponent } from "@/components/SearchComponent";
+import { useStats } from "@/components/StatsProvider";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  AlertTriangle,
+  Users,
+  Award,
+  Star,
+  TrendingUp,
+  ChevronRight,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -32,8 +39,9 @@ interface Entity {
 
 interface TrendingCardProps {
   entity: Entity;
-  type: 'nominee' | 'institution';
+  type: "nominee" | "institution";
 }
+
 function TrendingCard({ entity, type }: TrendingCardProps) {
   return (
     <Link href={`/${type}s/${entity.id}`}>
@@ -41,17 +49,21 @@ function TrendingCard({ entity, type }: TrendingCardProps) {
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative w-16 h-16">
-            <Image
-  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(entity.name)}&size=128`}
-  alt={`${entity.name} placeholder`}
-  fill
-  className="rounded-lg object-cover"
-  priority
-/>
+              <Image
+                src={
+                  entity.image
+                    ? entity.image
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(entity.name)}&size=128`
+                }
+                alt={`${entity.name} placeholder`}
+                fill
+                className="rounded-lg object-cover"
+                priority
+              />
             </div>
             <div className="flex-1">
               <h3 className="font-medium">{entity.name}</h3>
-              {type === 'nominee' && entity.position && (
+              {type === "nominee" && entity.position && (
                 <p className="text-sm text-gray-600">
                   {entity.position.name} at {entity.institution?.name}
                 </p>
@@ -59,7 +71,9 @@ function TrendingCard({ entity, type }: TrendingCardProps) {
               <div className="flex items-center gap-2 mt-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 <span className="font-medium">
-                  {entity.averageRating ? entity.averageRating.toFixed(1) : 'N/A'}
+                  {entity.averageRating
+                    ? entity.averageRating.toFixed(1)
+                    : "N/A"}
                 </span>
                 <span className="text-sm text-gray-500">
                   ({entity.totalRatings || 0} ratings)
@@ -72,8 +86,6 @@ function TrendingCard({ entity, type }: TrendingCardProps) {
     </Link>
   );
 }
-
-   
 
 export default function HomePage() {
   const stats = useStats();
@@ -89,7 +101,8 @@ export default function HomePage() {
               Exposing Corruption in Kenya
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-gray-300">
-              Join thousands of Kenyans in rating and exposing corruption through transparent, evidence-based reporting.
+              Join thousands of Kenyans in rating and exposing corruption
+              through transparent, evidence-based reporting.
             </p>
 
             {/* Search Box */}
@@ -115,19 +128,27 @@ export default function HomePage() {
           <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">{statistics.totalNominees}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {statistics.totalNominees}
+                </div>
                 <div className="text-sm text-gray-600">Corrupt Officials</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">{statistics.totalInstitutions}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {statistics.totalInstitutions}
+                </div>
                 <div className="text-sm text-gray-600">Institutions</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">{statistics.totalRatings}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {statistics.totalRatings}
+                </div>
                 <div className="text-sm text-gray-600">Total Ratings</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">{statistics.totalUsers}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {statistics.totalUsers}
+                </div>
                 <div className="text-sm text-gray-600">Active Users</div>
               </div>
             </div>
@@ -154,7 +175,7 @@ export default function HomePage() {
                 </Link>
               </CardHeader>
               <CardContent className="space-y-4">
-                {trendingNominees.map(nominee => (
+                {trendingNominees.map((nominee) => (
                   <TrendingCard
                     key={nominee.id}
                     entity={nominee}
@@ -179,7 +200,7 @@ export default function HomePage() {
                 </Link>
               </CardHeader>
               <CardContent className="space-y-4">
-                {trendingInstitutions.map(institution => (
+                {trendingInstitutions.map((institution) => (
                   <TrendingCard
                     key={institution.id}
                     entity={institution}
@@ -203,9 +224,13 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                Submit evidence-based reports about corrupt officials and institutions. Help expose corruption in Kenya.
+                Submit evidence-based reports about corrupt officials and
+                institutions. Help expose corruption in Kenya.
               </p>
-              <Link href="/submit" className="text-slate-900 font-medium flex items-center group">
+              <Link
+                href="/submit"
+                className="text-slate-900 font-medium flex items-center group"
+              >
                 Start Reporting
                 <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" />
               </Link>
@@ -220,14 +245,21 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                Explore detailed corruption metrics and evidence for both officials and institutions.
+                Explore detailed corruption metrics and evidence for both
+                officials and institutions.
               </p>
               <div className="flex gap-4">
-                <Link href="/nominees" className="text-slate-900 font-medium flex items-center group">
+                <Link
+                  href="/nominees"
+                  className="text-slate-900 font-medium flex items-center group"
+                >
                   Officials
                   <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" />
                 </Link>
-                <Link href="/institutions" className="text-slate-900 font-medium flex items-center group">
+                <Link
+                  href="/institutions"
+                  className="text-slate-900 font-medium flex items-center group"
+                >
                   Institutions
                   <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" />
                 </Link>
@@ -243,9 +275,13 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                View the most corrupt officials and institutions ranked by evidence and citizen ratings.
+                View the most corrupt officials and institutions ranked by
+                evidence and citizen ratings.
               </p>
-              <Link href="/leaderboard" className="text-slate-900 font-medium flex items-center group">
+              <Link
+                href="/leaderboard"
+                className="text-slate-900 font-medium flex items-center group"
+              >
                 View Rankings
                 <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" />
               </Link>
@@ -253,7 +289,6 @@ export default function HomePage() {
           </Card>
         </div>
       </div>
-
 
       {/* Why Use This Platform Section */}
       <div className="bg-slate-50 py-16">
@@ -263,7 +298,8 @@ export default function HomePage() {
               Why Report Corruption?
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Join our community in making Kenya corruption-free through transparency and accountability.
+              Join our community in making Kenya corruption-free through
+              transparency and accountability.
             </p>
           </div>
 
@@ -275,7 +311,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Community Driven</h3>
                 <p className="text-gray-600">
-                  Join thousands of Kenyans working together to expose and fight corruption through transparent reporting.
+                  Join thousands of Kenyans working together to expose and fight
+                  corruption through transparent reporting.
                 </p>
               </CardContent>
             </Card>
@@ -287,7 +324,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Evidence Based</h3>
                 <p className="text-gray-600">
-                  Submit and view verified evidence of corruption, We make sure all claims are properly documented.
+                  Submit and view verified evidence of corruption, We make sure
+                  all claims are properly documented.
                 </p>
               </CardContent>
             </Card>
@@ -299,7 +337,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Real Impact</h3>
                 <p className="text-gray-600">
-                  Make a real difference by helping to identify and expose corruption at all levels of the Kenyan Government.
+                  Make a real difference by helping to identify and expose
+                  corruption at all levels of the Kenyan Government.
                 </p>
               </CardContent>
             </Card>
