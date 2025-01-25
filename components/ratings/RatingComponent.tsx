@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
+
 
 interface RatingCategory {
   id: number;
@@ -38,7 +39,7 @@ export function RatingComponent({
   onClose
 }: RatingComponentProps) {
   const { isAuthenticated } = useAuth();
-  const { toast } = useToast();
+  // const { toast } = useToast();
   const [ratings, setRatings] = useState<Record<number, number>>({});
   const [overallComment, setOverallComment] = useState('');
   const [loading, setLoading] = useState(false);
@@ -120,19 +121,25 @@ export function RatingComponent({
         body: JSON.stringify({ ratings: submissions })
       });
 
-      if (!response.ok) throw new Error('Failed to submit ratings');
-
-      setRatings({});
-      setOverallComment('');
+      if (!response.ok) {
+        throw new Error('Failed to submit ratings');
+      }
 
       toast({
         title: "Success",
         description: "Ratings submitted successfully"
       });
 
-      if (onClose) onClose();
-      window.location.reload();
+      setRatings({});
+      setOverallComment('');
+      setLoading(false);
+
+      if (onClose) {
+        onClose();
+      }
+
     } catch (error) {
+      console.error('Error submitting ratings:', error);
       toast({
         variant: "destructive",
         title: "Error",

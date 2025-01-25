@@ -187,7 +187,7 @@ export default function NomineePage() {
         // Use Promise.all to fetch data concurrently
         const [nomineeData, scandalsData, evidenceData, , categoriesData] = await Promise.all([
           fetchData(`/api/nominees/${id}`),
-          fetchData(`/api/scandals?type=nominee&entityId=${id}`),
+          fetchData(`/api/scandals?nomineeId=${id}`),
           fetchData(`/api/evidence?type=nominee&entityId=${id}&status=VERIFIED`),
           fetchData(`/api/nominees/${id}/ratings`),
           fetchData(`/api/rating-categories`)
