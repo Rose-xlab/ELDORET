@@ -16,7 +16,9 @@ interface ScandalsSectionProps {
   scandals?: Scandal[] | null;
 }
 
-export function ScandalsSection({ scandals = [] }: ScandalsSectionProps) {
+export function ScandalsSection({
+  scandals = [],
+}: ScandalsSectionProps) {
   const hasScandals = Array.isArray(scandals) && scandals.length > 0;
 
   return (
