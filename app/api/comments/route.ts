@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getUser } from '@/lib/auth';
+// import { getUser } from '@/lib/auth';  // Commented out
 import { z } from 'zod';
 
 // Define the User interface for getUser
@@ -17,7 +17,10 @@ export async function GET(req: NextRequest) {
     const institutionId = searchParams.get('institutionId');
     const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
     const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10')));
-    const user: User | null = await getUser();
+    
+    // Set default anonymous user
+    const user: User = { id: 0, name: 'Anonymous User', email: 'anonymous@example.com' };
+    // const user: User | null = await getUser();  // Commented out
 
     const where = {
       ...(nomineeId ? { nomineeId: parseInt(nomineeId) } : {}),
@@ -95,10 +98,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getUser();
-    if (!user || typeof user.id !== 'number') {
-      return NextResponse.json({ error: 'Unauthorized or invalid user' }, { status: 401 });
-    }
+    // Comment out user authentication
+    // const user = await getUser();
+    // if (!user || typeof user.id !== 'number') {
+    //   return NextResponse.json({ error: 'Unauthorized or invalid user' }, { status: 401 });
+    // }
 
     const schema = z.object({
       content: z.string().min(1),
@@ -111,7 +115,7 @@ export async function POST(req: NextRequest) {
     const comment = await prisma.comment.create({
       data: {
         content: content.trim(),
-        userId: user.id,
+        userId: 0, // Use anonymous user ID
         nomineeId: nomineeId ? (nomineeId) : null,
         institutionId: institutionId ? (institutionId) : null,
       },

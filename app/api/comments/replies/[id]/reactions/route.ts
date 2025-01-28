@@ -1,14 +1,17 @@
-// app/api/comments/replies/[id]/reactions/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getUser } from '@/lib/auth';
+// import { getUser } from '@/lib/auth';  // Commented out
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
     try {
-      const user = await getUser();
-      if (!user || typeof user.id !== 'number') {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+      // Comment out authentication check
+      // const user = await getUser();
+      // if (!user || typeof user.id !== 'number') {
+      //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      // }
+
+      // Set anonymous user
+      const user = { id: 0 };
   
       const { isLike } = await req.json();
       if (typeof isLike !== 'boolean') {

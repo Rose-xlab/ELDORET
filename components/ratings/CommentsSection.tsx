@@ -1,11 +1,10 @@
-// components/comments/CommentSection.tsx
 import React, { useState, useCallback } from 'react';
-import { useAuth } from '@/lib/auth-context';
+// import { useAuth } from '@/lib/auth-context';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { AuthModal } from '@/components/AuthModal';
+// import { AuthModal } from '@/components/AuthModal';
 import { formatDistanceToNow } from 'date-fns';
 import { ThumbsUp, ThumbsDown, Reply, MessageCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -134,7 +133,8 @@ const CommentComponent: React.FC<{
               {comment.dislikes}
             </Button>
 
-            {!isReply && isAuthenticated && (
+            {/* Comment out isAuthenticated check */}
+            {!isReply && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -199,7 +199,7 @@ export function CommentSection({
   onSubmitComment,
   onReact,
 }: CommentSectionProps) {
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -218,7 +218,7 @@ export function CommentSection({
         },
         body: JSON.stringify({
           content: newComment,
-          userId: 1, // Replace with actual user ID
+          userId: 0, // Changed from 1 to 0 for anonymous
           nomineeId: entityType === 'nominee' ? entityId : undefined,
           institutionId: entityType === 'institution' ? entityId : undefined,
         }),
@@ -247,6 +247,7 @@ export function CommentSection({
     isLike: boolean,
     isReply: boolean
   ) => {
+    /* Comment out auth check
     if (!isAuthenticated) {
       toast({
         variant: "destructive",
@@ -255,6 +256,7 @@ export function CommentSection({
       });
       return;
     }
+    */
 
     try {
       await onReact(commentId, isLike, isReply);
@@ -265,7 +267,7 @@ export function CommentSection({
         description: "Failed to update reaction"
       });
     }
-  }, [isAuthenticated, onReact, toast]);
+  }, [onReact, toast]);
 
   return (
     <div className="space-y-6">
@@ -274,7 +276,8 @@ export function CommentSection({
         <h3 className="text-lg font-medium">Comments</h3>
       </div>
 
-      {isAuthenticated ? (
+      {/* Comment out authentication condition */}
+      {/* {isAuthenticated ? ( */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <Textarea
             value={newComment}
@@ -291,7 +294,7 @@ export function CommentSection({
             {isSubmitting ? 'Posting...' : 'Post Comment'}
           </Button>
         </form>
-      ) : (
+      {/* ) : (
         <AuthModal
           trigger={
             <Button variant="outline" className="w-full">
@@ -300,7 +303,7 @@ export function CommentSection({
           }
           mode="comment"
         />
-      )}
+      )} */}
 
       <div className="space-y-4">
         {commentList.length > 0 ? (
@@ -310,7 +313,7 @@ export function CommentSection({
               comment={comment}
               onReaction={handleReaction}
               onSubmitReply={onSubmitComment}
-              isAuthenticated={isAuthenticated}
+              isAuthenticated={true} // Changed to always true for anonymous
             />
           ))
         ) : (

@@ -65,14 +65,14 @@ export function RatingComponent({
   }, [isAuthenticated, type, entityId]);
 
   const handleRating = (categoryId: number, score: number) => {
-    if (!isAuthenticated) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Required",
-        description: "Please sign in to rate"
-      });
-      return;
-    }
+    //if (!isAuthenticated) {
+      //toast({
+        //variant: "destructive",
+        //title: "Authentication Required",
+        //description: "Please sign in to rate"
+      //});
+      //return;
+    //}
 
     if (!rateLimit.allowed) {
       toast({
@@ -102,7 +102,8 @@ export function RatingComponent({
   };
 
   const handleSubmit = async () => {
-    if (!isAuthenticated || !validateSubmission()) return;
+    //if (!isAuthenticated || !validateSubmission()) return;
+    if (!validateSubmission()) return;
 
     setLoading(true);
     try {
@@ -180,16 +181,16 @@ export function RatingComponent({
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <AuthModal
-        trigger={
-          <Button className="w-full">Sign in to Rate</Button>
-        }
-        mode="rating"
-      />
-    );
-  }
+  //if (!isAuthenticated) {
+    //return (
+      //<AuthModal
+        //trigger={
+          //<Button className="w-full">Sign in to Rate</Button>
+        //}
+        //mode="rating"
+      ///>
+    //);
+  //}
 
   if (!rateLimit.allowed) {
     return (

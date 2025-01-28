@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getUser } from '@/lib/auth';
+// import { getUser } from '@/lib/auth';  // Commented out
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -9,7 +9,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Invalid comment ID' }, { status: 400 });
     }
 
-    const user = await getUser();
+    // Comment out getUser and set default anonymous user
+    // const user = await getUser();
+    const user = { id: 0 }; // Anonymous user
+
     const comment = await prisma.comment.findUnique({
       where: { id: commentId },
       include: {

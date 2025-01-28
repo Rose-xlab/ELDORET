@@ -4,8 +4,8 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { AuthButton } from "@/components/auth-button";
-import { AuthProvider, useAuth } from "@/lib/auth-context";
+// import { AuthButton } from "@/components/auth-button";
+// import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { SearchProvider } from "@/components/SearchProvider";
@@ -17,7 +17,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 function NavBar() {
-  const { isAuthenticated, user } = useAuth();
+  // const { isAuthenticated, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -48,6 +48,7 @@ function NavBar() {
 
               <ThemeSwitcher />
 
+              {/* Comment out auth-related UI
               {isAuthenticated && user ? (
                 <div className="flex items-center space-x-2">
                   <Link href="/profile" className="flex items-center space-x-2 hover:text-primary-foreground/80">
@@ -67,6 +68,7 @@ function NavBar() {
               ) : (
                 <AuthButton />
               )}
+              */}
             </div>
 
             {/* Mobile Menu Button */}
@@ -119,6 +121,7 @@ function NavBar() {
                   <ThemeSwitcher />
                 </div>
 
+                {/* Comment out auth-related mobile UI
                 {isAuthenticated && user ? (
                   <div className="px-3 py-2">
                     <Link 
@@ -146,6 +149,7 @@ function NavBar() {
                     <AuthButton />
                   </div>
                 )}
+                */}
               </div>
             </div>
           )}
@@ -164,7 +168,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <AuthProvider>
+          {/* <AuthProvider> Comment out AuthProvider */}
             <SearchProvider>
               <StatsProvider>
                 <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -264,7 +268,7 @@ export default function RootLayout({
                 </div>
               </StatsProvider>
             </SearchProvider>
-          </AuthProvider>
+          {/* </AuthProvider> */}
         </ThemeProvider>
       </body>
     </html>

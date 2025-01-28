@@ -6,16 +6,19 @@ import { checkRateLimit } from '@/lib/rate-limiter';
 interface RatingInput {
   categoryId: number;
   score: number;
-  comment?: string;  // Make comment optional
+  comment?: string;
 }
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Auth check
-    const user = await getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // 1. Auth check - commented out for anonymous access
+    // const user = await getUser();
+    // if (!user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
+
+    // Using default user ID for anonymous access
+    const user = { id: 0 };
 
     const institutionId = parseInt(req.nextUrl.pathname.split('/')[3], 10);
     const institution = await prisma.institution.findUnique({
@@ -26,14 +29,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Institution not found' }, { status: 404 });
     }
 
-    // 2. Check rate limit
-    const rateLimitCheck = await checkRateLimit(user.id, institutionId, 'institution');
-    if (!rateLimitCheck.allowed) {
-      return NextResponse.json(
-        { error: rateLimitCheck.message },
-        { status: 429 }
-      );
-    }
+    // 2. Check rate limit - commented out for anonymous access
+    // const rateLimitCheck = await checkRateLimit(user.id, institutionId, 'institution');
+    // if (!rateLimitCheck.allowed) {
+    //   return NextResponse.json(
+    //     { error: rateLimitCheck.message },
+    //     { status: 429 }
+    //   );
+    // }
 
     const { ratings } = (await req.json()) as { ratings: RatingInput[] };
 
@@ -52,8 +55,8 @@ export async function POST(req: NextRequest) {
         return prisma.institutionRating.create({
           data: {
             score,
-            comment: comment || '',  // Use empty string fallback like nominee route
-            userId: user.id,         // Use actual user ID
+            comment: comment || '',
+            userId: user.id,  // Will use anonymous user ID (0)
             institutionId,
             ratingCategoryId: categoryId,
           },
@@ -63,7 +66,7 @@ export async function POST(req: NextRequest) {
       throw new Error('Invalid rating data: ' + error.message);
     });
 
-    // Optional: Add comment creation like nominee route
+    // Optional: Add comment creation
     const overallComment = ratings[0]?.comment;
     if (overallComment) {
       await prisma.comment.create({

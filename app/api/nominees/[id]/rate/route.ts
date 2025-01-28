@@ -9,11 +9,14 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // 1. Auth check
-    const user = await getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // 1. Auth check - commented out for anonymous access
+    // const user = await getUser();
+    // if (!user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
+
+    // Using default user ID for anonymous access
+    const user = { id: 0 };
 
     // 2. Parse and validate input
     const nomineeId = parseInt(params.id);
@@ -26,14 +29,14 @@ export async function POST(
       );
     }
 
-    // 3. Check rate limit
-    const rateLimitCheck = await checkRateLimit(user.id, nomineeId, 'nominee');
-    if (!rateLimitCheck.allowed) {
-      return NextResponse.json(
-        { error: rateLimitCheck.message },
-        { status: 429 }
-      );
-    }
+    // 3. Check rate limit - commented out for anonymous access
+    // const rateLimitCheck = await checkRateLimit(user.id, nomineeId, 'nominee');
+    // if (!rateLimitCheck.allowed) {
+    //   return NextResponse.json(
+    //     { error: rateLimitCheck.message },
+    //     { status: 429 }
+    //   );
+    // }
 
     // 4. Submit ratings
     const createdRatings = await Promise.all(

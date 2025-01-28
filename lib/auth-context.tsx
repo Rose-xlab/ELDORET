@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 
 interface User {
   id: number;
@@ -15,52 +15,31 @@ interface AuthContextType {
   updateUser: (updates: Partial<User>) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create a default anonymous user
+const defaultUser: User = {
+  id: 0,
+  name: 'Anonymous User',
+  email: 'anonymous@example.com'
+};
+
+const AuthContext = createContext<AuthContextType>({
+  user: defaultUser,
+  isAuthenticated: true, // Always authenticated
+  login: () => {}, // Empty function
+  logout: () => {}, // Empty function
+  updateUser: () => {} // Empty function
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return !!localStorage.getItem('token');
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [isAuthenticated]);
-
-  const login = useCallback((token: string) => {
-    localStorage.setItem('token', token);
-    // Fetch user data using the token and set the user state
-    // Example: fetchUserData(token).then(userData => setUser(userData));
-  }, []);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setUser(null);
-  }, []);
-
-  const updateUser = useCallback((updates: Partial<User>) => {
-    setUser(prev => prev ? { ...prev, ...updates } : null);
-  }, []);
-
+  // Simplified provider that always returns authenticated state
   return (
     <AuthContext.Provider
       value={{
-        user,
-        isAuthenticated,
-        login,
-        logout,
-        updateUser
+        user: defaultUser,
+        isAuthenticated: true,
+        login: () => {},
+        logout: () => {},
+        updateUser: () => {}
       }}
     >
       {children}

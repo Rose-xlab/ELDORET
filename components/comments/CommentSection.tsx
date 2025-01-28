@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useAuth } from "@/lib/auth-context";
+// import { useAuth } from "@/lib/auth-context";  // Commented out
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { AuthModal } from "@/components/AuthModal";
+// import { AuthModal } from "@/components/AuthModal";  // Commented out
 import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp, ThumbsDown, Reply, MessageCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -80,7 +80,11 @@ const CommentComponent: React.FC<{
       const response = await fetch(`/api/comments/${comment.id}/replies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: replyContent }),
+        body: JSON.stringify({ 
+          content: replyContent,
+          // Using anonymous user ID
+          userId: 0
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to post reply");
@@ -121,8 +125,7 @@ const CommentComponent: React.FC<{
             <div>
               <span className="font-medium">{comment.user.name}</span>
               <span className="text-sm text-gray-500 ml-2">
-                  {comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : "Invalid date"}
-
+                {comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : "Invalid date"}
               </span>
             </div>
           </div>
@@ -148,7 +151,8 @@ const CommentComponent: React.FC<{
               {comment.dislikes} <ThumbsDown className="w-4 h-4 ml-1" />
             </Button>
 
-            {!isReply && isAuthenticated && (
+            {/* Removed isAuthenticated check */}
+            {!isReply && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -195,7 +199,7 @@ const CommentComponent: React.FC<{
                   isReply={true}
                   onReaction={onReaction}
                   onSubmitReply={onSubmitReply}
-                  isAuthenticated={isAuthenticated}
+                  isAuthenticated={true} // Always allow anonymous
                 />
               ))}
             </div>
@@ -213,7 +217,7 @@ export function CommentSection({
   onSubmitComment,
   onReact,
 }: CommentSectionProps) {
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();  // Commented out
   const { toast } = useToast();
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -248,7 +252,7 @@ export function CommentSection({
         },
         body: JSON.stringify({
           content: newComment,
-          userId: 1, // Replace with actual user ID
+          userId: 0, // Using anonymous user ID
           nomineeId: entityType === "nominee" ? entityId : undefined,
           institutionId: entityType === "institution" ? entityId : undefined,
         }),
@@ -274,6 +278,7 @@ export function CommentSection({
 
   const handleReaction = useCallback(
     async (commentId: number, isLike: boolean, isReply: boolean) => {
+      /* Comment out authentication check
       if (!isAuthenticated) {
         toast({
           variant: "destructive",
@@ -282,6 +287,7 @@ export function CommentSection({
         });
         return;
       }
+      */
 
       try {
         await onReact(commentId, isLike, isReply);
@@ -293,7 +299,7 @@ export function CommentSection({
         });
       }
     },
-    [isAuthenticated, onReact, toast],
+    [onReact, toast], // Removed isAuthenticated from dependencies
   );
 
   return (
@@ -303,33 +309,36 @@ export function CommentSection({
         <h3 className="text-lg font-medium">Comments</h3>
       </div>
 
-      {isAuthenticated ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Share your thoughts..."
-            disabled={isSubmitting}
-            className="min-h-[120px]"
-          />
-          <Button
-            type="submit"
-            disabled={isSubmitting || !newComment.trim()}
-            className="w-full bg-[#006600] hover:bg-[#005500] text-white"
-          >
-            {isSubmitting ? "Posting..." : "Post Comment"}
-          </Button>
-        </form>
-      ) : (
-        <AuthModal
-          trigger={
-            <Button variant="outline" className="w-full">
-              Sign in to comment
-            </Button>
-          }
-          mode="comment"
+      {/* Removed authentication conditional rendering */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Share your thoughts..."
+          disabled={isSubmitting}
+          className="min-h-[120px]"
         />
-      )}
+        <Button
+          type="submit"
+          disabled={isSubmitting || !newComment.trim()}
+          className="w-full bg-[#006600] hover:bg-[#005500] text-white"
+        >
+          {isSubmitting ? "Posting..." : "Post Comment"}
+        </Button>
+      </form>
+
+      {/* Commented out AuthModal
+      // : (
+      //   <AuthModal
+      //     trigger={
+      //       <Button variant="outline" className="w-full">
+      //         Sign in to comment
+      //       </Button>
+      //     }
+      //     mode="comment"
+      //   />
+      // )
+      */}
 
       <div className="space-y-4">
         {commentList.length > 0 ? (
@@ -339,7 +348,7 @@ export function CommentSection({
               comment={comment}
               onReaction={handleReaction}
               onSubmitReply={onSubmitComment}
-              isAuthenticated={isAuthenticated}
+              isAuthenticated={true} // Always allow anonymous
             />
           ))
         ) : (

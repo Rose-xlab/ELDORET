@@ -122,40 +122,33 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      {!loading && statistics && (
-        <div className="max-w-7xl mx-auto px-4 -mt-10 mb-16 relative z-10">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">
-                  {statistics.totalNominees}
-                </div>
-                <div className="text-sm text-gray-600">Corrupt Officials</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">
-                  {statistics.totalInstitutions}
-                </div>
-                <div className="text-sm text-gray-600">Institutions</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">
-                  {statistics.totalRatings}
-                </div>
-                <div className="text-sm text-gray-600">Total Ratings</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900">
-                  {statistics.totalUsers}
-                </div>
-                <div className="text-sm text-gray-600">Active Users</div>
-              </div>
-            </div>
+  {/* Stats Section */}
+{!loading && statistics && (
+  <div className="max-w-7xl mx-auto px-2 sm:px-4 -mt-6 sm:-mt-10 mb-8 sm:mb-16 relative z-10">
+    <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
+        <div className="text-center py-2 sm:py-0">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+            {statistics.totalNominees}
           </div>
+          <div className="text-sm text-gray-600">Corrupt Officials</div>
         </div>
-      )}
-
+        <div className="text-center py-2 sm:py-0">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+            {statistics.totalInstitutions}
+          </div>
+          <div className="text-sm text-gray-600">Institutions</div>
+        </div>
+        <div className="text-center py-2 sm:py-0 col-span-2 md:col-span-1">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+            {statistics.totalRatings}
+          </div>
+          <div className="text-sm text-gray-600">Total Ratings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       {/* Trending Section */}
       {!loading && (
         <div className="max-w-7xl mx-auto px-4 py-12">
